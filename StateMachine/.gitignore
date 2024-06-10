@@ -1,0 +1,6 @@
+.idea/
+StateMachineTestApp/bin
+StateMachineTestApp/obj
+Tests/bin
+Tests/obj
+*DotSettings.user
