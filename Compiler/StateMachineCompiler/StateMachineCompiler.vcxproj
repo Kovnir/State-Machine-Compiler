@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Optimizer.cpp" />
+    <ClCompile Include="Optimizer.h" />
     <ClCompile Include="StateMachineCompiler.cpp" />
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="Tokenizer.cpp" />

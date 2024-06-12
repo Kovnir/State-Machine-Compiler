@@ -17,8 +17,6 @@ enum TokenType
 };
 
 
-
-
 struct Token
 {
 public:

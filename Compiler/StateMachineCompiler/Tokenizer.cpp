@@ -2,7 +2,7 @@
 #include "Tokenizer.h"
 
 
-std::vector<Token> Tokenizer::Parse(std::string input)
+std::vector<Token> Tokenizer::parse(std::string input)
 {
 	std::vector<Token> tokens;
 	std::string current = "";

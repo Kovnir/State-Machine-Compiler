@@ -12,7 +12,7 @@ TEST(TokenizerTest, Parse)
  */)";
 
 
-	std::vector<Token> tokens = Tokenizer::Parse(input);
+	std::vector<Token> tokens = Tokenizer::parse(input);
 	
 	ASSERT_EQ(tokens.size(), 32);
 

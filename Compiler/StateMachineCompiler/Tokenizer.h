@@ -7,7 +7,7 @@ class Tokenizer
 public:
 	// Disallow creating an instance of this object
 	Tokenizer() = delete;
-	static std::vector<Token> Parse(std::string input);
+	static std::vector<Token> parse(std::string input);
 
 private:
 	static bool isBlankNotNew(char c);
