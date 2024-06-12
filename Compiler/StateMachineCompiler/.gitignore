@@ -1,0 +1,47 @@
+.vs/
+packages/
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build directories
+x64/
+Debug/
+Release/
+
+# Visual Studio Code settings
+.vscode/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CMakeLists.txt.user
+Makefile
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Backup files
+*.bak
+*.log
+*.backup
+
+# Build results
+*.obj
+*.pdb
+*.exe
+*.ilk
+*.idb
+*.ipdb
+*.iobj
