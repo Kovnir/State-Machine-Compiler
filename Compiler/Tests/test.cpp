@@ -13,7 +13,7 @@ void validateToken(const Token& token, TokenType type, const std::string& value,
 
 TEST(TokenizerTest, Parse)
 {
-    std::string input = R"(/*
+	std::string input = R"(/*
  * TestStateMachine
  *  IdleState default // some comment  here   
  *   on Play -> RunningState
@@ -21,7 +21,7 @@ TEST(TokenizerTest, Parse)
 
 
 	std::vector<Token> tokens = Tokenizer::parse(input);
-	
+
 	ASSERT_EQ(tokens.size(), 32);
 
 	validateToken(tokens[0], TokenType::SLASH_STAR, "", 0, 0);
@@ -185,4 +185,68 @@ TEST(OptimizerTest, clearStringEndings)
 	validateToken(optimized[20], TokenType::SPACE, "", 3, 15);
 	validateToken(optimized[21], TokenType::CUSTOM_NAME, "RunningState", 3, 16);
 	validateToken(optimized[22], TokenType::NEW_LINE, "", 3, 28);
+}
+
+
+TEST(OptimizerTest, clearNewLinesOnStart)
+{
+	std::vector<Token> tokens = {
+		Token(TokenType::NEW_LINE, "", 0, 1),
+		Token(TokenType::NEW_LINE, "", 1, 1),
+		Token(TokenType::NEW_LINE, "", 2, 1),
+		Token(TokenType::SPACE, "", 3, 2),
+		Token(TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3),
+		Token(TokenType::SPACE, "", 1, 19),
+		Token(TokenType::SPACE, "", 2, 2),
+		Token(TokenType::NEW_LINE, "", 1, 19),
+		Token(TokenType::CUSTOM_NAME, "RunningState", 3, 16),
+		Token(TokenType::NEW_LINE, "", 3, 28),
+		Token(TokenType::SPACE, "", 4, 2),
+	};
+
+	std::vector<Token> optimized = Optimizer::clearNewLinesOnStart(tokens);
+
+	ASSERT_EQ(optimized.size(), 8);
+
+	validateToken(optimized[0], TokenType::SPACE, "", 3, 2);
+	validateToken(optimized[1], TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3);
+	validateToken(optimized[2], TokenType::SPACE, "", 1, 19);
+	validateToken(optimized[3], TokenType::SPACE, "", 2, 2);
+	validateToken(optimized[4], TokenType::NEW_LINE, "", 1, 19);
+	validateToken(optimized[5], TokenType::CUSTOM_NAME, "RunningState", 3, 16);
+	validateToken(optimized[6], TokenType::NEW_LINE, "", 3, 28);
+	validateToken(optimized[7], TokenType::SPACE, "", 4, 2);
+}
+
+
+TEST(OptimizerTest, clearNewLinesOnEnd)
+{
+	std::vector<Token> tokens = {
+		Token(TokenType::NEW_LINE, "", 2, 1),
+		Token(TokenType::SPACE, "", 3, 2),
+		Token(TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3),
+		Token(TokenType::SPACE, "", 1, 19),
+		Token(TokenType::SPACE, "", 2, 2),
+		Token(TokenType::NEW_LINE, "", 1, 19),
+		Token(TokenType::NEW_LINE, "", 3, 28),
+		Token(TokenType::SPACE, "", 4, 2),
+		Token(TokenType::NEW_LINE, "", 5, 1),
+		Token(TokenType::NEW_LINE, "", 6, 1),
+		Token(TokenType::NEW_LINE, "", 7, 1),
+
+	};
+
+	std::vector<Token> optimized = Optimizer::clearNewLinesOnEnd(tokens);
+
+	ASSERT_EQ(optimized.size(), 8);
+
+	validateToken(optimized[0], TokenType::NEW_LINE, "", 2, 1);
+	validateToken(optimized[1], TokenType::SPACE, "", 3, 2);
+	validateToken(optimized[2], TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3);
+	validateToken(optimized[3], TokenType::SPACE, "", 1, 19);
+	validateToken(optimized[4], TokenType::SPACE, "", 2, 2);
+	validateToken(optimized[5], TokenType::NEW_LINE, "", 1, 19);
+	validateToken(optimized[6], TokenType::NEW_LINE, "", 3, 28);
+	validateToken(optimized[7], TokenType::SPACE, "", 4, 2);
+
 }
