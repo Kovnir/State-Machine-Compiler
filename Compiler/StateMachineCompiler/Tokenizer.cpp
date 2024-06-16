@@ -23,11 +23,10 @@ std::vector<Token> Tokenizer::parse(std::string input)
 		char c6 = (i + 6 >= length) ? ' ' : input[i + 6];
 		char c7 = (i + 7 >= length) ? ' ' : input[i + 7];
 
-		position++;
-
 		if (isBlankNotNew(c0))
 		{
 			tokens.emplace_back(TokenType::SPACE, "", line, position);
+			position++;
 			i++;
 			continue;
 		}
@@ -35,6 +34,7 @@ std::vector<Token> Tokenizer::parse(std::string input)
 		if (c0 == '*' && c1 == '/' && isBlank(c2))
 		{
 			tokens.emplace_back(TokenType::STAR_SLASH, "", line, position);
+			position += 2;
 			i += 2;
 			continue;
 		}
@@ -42,6 +42,7 @@ std::vector<Token> Tokenizer::parse(std::string input)
 		if (c0 == '/' && c1 == '*' && isBlank(c2))
 		{
 			tokens.emplace_back(TokenType::SLASH_STAR, "", line, position);
+			position += 2;
 			i += 2;
 			continue;
 		}
@@ -50,6 +51,7 @@ std::vector<Token> Tokenizer::parse(std::string input)
 		if (c0 == '*' && isBlank(c1))
 		{
 			tokens.emplace_back(TokenType::STAR, "", line, position);
+			position ++;
 			i++;
 			continue;
 		}
@@ -75,8 +77,8 @@ std::vector<Token> Tokenizer::parse(std::string input)
 				i++;
 			}
 
-
 			tokens.emplace_back(TokenType::COMMENT, value, line, position);
+			position += (int)value.length() + 2;
 			continue;
 		}
 
@@ -85,12 +87,14 @@ std::vector<Token> Tokenizer::parse(std::string input)
 		{
 			tokens.emplace_back(TokenType::ARROW, "", line, position);
 			i += 2;
+			position += 2;
 			continue;
 		}
 
 		if (c0 == 'o' && c1 == 'n' && isBlank(c2))
 		{
 			tokens.emplace_back(TokenType::ON, "", line, position);
+			position += 2;
 			i += 2;
 			continue;
 		}
@@ -99,6 +103,7 @@ std::vector<Token> Tokenizer::parse(std::string input)
 		if (c0 == 'd' && c1 == 'e' && c2 == 'f' && c3 == 'a' && c4 == 'u' && c5 == 'l' && c6 == 't' && isBlank(c7))
 		{
 			tokens.emplace_back(TokenType::DEFAULT, "", line, position);
+			position += 7;
 			i += 7;
 			continue;
 		}
@@ -113,6 +118,7 @@ std::vector<Token> Tokenizer::parse(std::string input)
 		}
 
 		tokens.emplace_back(TokenType::CUSTOM_NAME, value, line, position);
+		position += (int)value.length();
 	}
 	return tokens;
 }
