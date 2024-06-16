@@ -3,6 +3,13 @@
 #include "../../Compiler/StateMachineCompiler/Tokenizer.cpp"
 #include "../../Compiler/StateMachineCompiler/Optimizer.cpp"
 
+void validateToken(const Token& token, TokenType type, const std::string& value, int line, int position)
+{
+	EXPECT_EQ(token.type, type) << "Token type mismatch at line " << line << ", position " << position;
+	EXPECT_EQ(token.value, value) << "Token type mismatch at line " << line << ", position " << position;
+	EXPECT_EQ(token.line, line) << "Token type mismatch at line " << line << ", position " << position;
+	EXPECT_EQ(token.position, position) << "Token type mismatch at line " << line << ", position " << position;
+}
 
 TEST(TokenizerTest, Parse)
 {
@@ -17,103 +24,165 @@ TEST(TokenizerTest, Parse)
 	
 	ASSERT_EQ(tokens.size(), 32);
 
-	EXPECT_EQ(tokens[0].type, TokenType::SLASH_STAR);
-	EXPECT_EQ(tokens[1].type, TokenType::NEW_LINE);
-	EXPECT_EQ(tokens[2].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[3].type, TokenType::STAR);
-	EXPECT_EQ(tokens[4].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[5].type, TokenType::CUSTOM_NAME);
-	EXPECT_EQ(tokens[6].type, TokenType::NEW_LINE);
-	EXPECT_EQ(tokens[7].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[8].type, TokenType::STAR);
-	EXPECT_EQ(tokens[9].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[10].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[11].type, TokenType::CUSTOM_NAME);
-	EXPECT_EQ(tokens[12].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[13].type, TokenType::DEFAULT);
-	EXPECT_EQ(tokens[14].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[15].type, TokenType::COMMENT);
-	EXPECT_EQ(tokens[16].type, TokenType::NEW_LINE);
-	EXPECT_EQ(tokens[17].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[18].type, TokenType::STAR);
-	EXPECT_EQ(tokens[19].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[20].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[21].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[22].type, TokenType::ON);
-	EXPECT_EQ(tokens[23].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[24].type, TokenType::CUSTOM_NAME);
-	EXPECT_EQ(tokens[25].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[26].type, TokenType::ARROW);
-	EXPECT_EQ(tokens[27].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[28].type, TokenType::CUSTOM_NAME);
-	EXPECT_EQ(tokens[29].type, TokenType::NEW_LINE);
-	EXPECT_EQ(tokens[30].type, TokenType::SPACE);
-	EXPECT_EQ(tokens[31].type, TokenType::STAR_SLASH);
+	validateToken(tokens[0], TokenType::SLASH_STAR, "", 0, 0);
+	validateToken(tokens[1], TokenType::NEW_LINE, "", 0, 2);
+	validateToken(tokens[2], TokenType::SPACE, "", 1, 0);
+	validateToken(tokens[3], TokenType::STAR, "", 1, 1);
+	validateToken(tokens[4], TokenType::SPACE, "", 1, 2);
+	validateToken(tokens[5], TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3);
+	validateToken(tokens[6], TokenType::NEW_LINE, "", 1, 19);
+	validateToken(tokens[7], TokenType::SPACE, "", 2, 0);
+	validateToken(tokens[8], TokenType::STAR, "", 2, 1);
+	validateToken(tokens[9], TokenType::SPACE, "", 2, 2);
+	validateToken(tokens[10], TokenType::SPACE, "", 2, 3);
+	validateToken(tokens[11], TokenType::CUSTOM_NAME, "IdleState", 2, 4);
+	validateToken(tokens[12], TokenType::SPACE, "", 2, 13);
+	validateToken(tokens[13], TokenType::DEFAULT, "", 2, 14);
+	validateToken(tokens[14], TokenType::SPACE, "", 2, 21);
+	validateToken(tokens[15], TokenType::COMMENT, " some comment  here   ", 2, 22);
+	validateToken(tokens[16], TokenType::NEW_LINE, "", 2, 46);
+	validateToken(tokens[17], TokenType::SPACE, "", 3, 0);
+	validateToken(tokens[18], TokenType::STAR, "", 3, 1);
+	validateToken(tokens[19], TokenType::SPACE, "", 3, 2);
+	validateToken(tokens[20], TokenType::SPACE, "", 3, 3);
+	validateToken(tokens[21], TokenType::SPACE, "", 3, 4);
+	validateToken(tokens[22], TokenType::ON, "", 3, 5);
+	validateToken(tokens[23], TokenType::SPACE, "", 3, 7);
+	validateToken(tokens[24], TokenType::CUSTOM_NAME, "Play", 3, 8);
+	validateToken(tokens[25], TokenType::SPACE, "", 3, 12);
+	validateToken(tokens[26], TokenType::ARROW, "", 3, 13);
+	validateToken(tokens[27], TokenType::SPACE, "", 3, 15);
+	validateToken(tokens[28], TokenType::CUSTOM_NAME, "RunningState", 3, 16);
+	validateToken(tokens[29], TokenType::NEW_LINE, "", 3, 28);
+	validateToken(tokens[30], TokenType::SPACE, "", 4, 0);
+	validateToken(tokens[31], TokenType::STAR_SLASH, "", 4, 1);
 }
 
 TEST(OptimizerTest, clearEverythingBeforeStar)
 {
 	std::vector<Token> tokens = {
-		Token(TokenType::SLASH_STAR, "", 1, 1),						// -
-		Token(TokenType::NEW_LINE, "", 1, 3),
-		Token(TokenType::SPACE, "", 2, 1),							// -
-		Token(TokenType::STAR, "", 2, 2),							// -
+		Token(TokenType::SLASH_STAR, "", 0, 0),                  // -
+		Token(TokenType::NEW_LINE, "", 0, 2),
+		Token(TokenType::SPACE, "", 1, 0),                      // -
+		Token(TokenType::STAR, "", 1, 1),                       // -
+		Token(TokenType::SPACE, "", 1, 2),
+		Token(TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3),
+		Token(TokenType::NEW_LINE, "", 1, 19),
+		Token(TokenType::SPACE, "", 2, 0),                      // -
+		Token(TokenType::STAR, "", 2, 1),                       // -
+		Token(TokenType::SPACE, "", 2, 2),
 		Token(TokenType::SPACE, "", 2, 3),
-		Token(TokenType::CUSTOM_NAME, "TestStateMachine", 2, 4),
-		Token(TokenType::NEW_LINE, "", 2, 20),
-		Token(TokenType::SPACE, "", 3, 1),							// -
-		Token(TokenType::STAR, "", 3, 2),							// -
+		Token(TokenType::CUSTOM_NAME, "IdleState", 2, 4),
+		Token(TokenType::SPACE, "", 2, 12),
+		Token(TokenType::DEFAULT, "", 2, 13),
+		Token(TokenType::SPACE, "", 2, 20),
+		Token(TokenType::COMMENT, " some comment  here   ", 2, 21),
+		Token(TokenType::NEW_LINE, "", 2, 46),
+		Token(TokenType::SPACE, "", 3, 0),                      // -
+		Token(TokenType::STAR, "", 3, 1),                       // -
+		Token(TokenType::SPACE, "", 3, 2),
 		Token(TokenType::SPACE, "", 3, 3),
 		Token(TokenType::SPACE, "", 3, 4),
-		Token(TokenType::CUSTOM_NAME, "IdleState", 3, 5),
-		Token(TokenType::SPACE, "", 3, 13),
-		Token(TokenType::DEFAULT, "", 3, 14),
-		Token(TokenType::SPACE, "", 3, 21),
-		Token(TokenType::COMMENT, " some comment", 3, 22),
-		Token(TokenType::NEW_LINE, "", 3, 37),
-		Token(TokenType::SPACE, "", 4, 1),							// -
-		Token(TokenType::STAR, "", 4, 2),							// -
-		Token(TokenType::SPACE, "", 4, 3),
-		Token(TokenType::SPACE, "", 4, 4),
-		Token(TokenType::SPACE, "", 4, 5),
-		Token(TokenType::ON, "", 4, 6),
-		Token(TokenType::SPACE, "", 4, 8),
-		Token(TokenType::CUSTOM_NAME, "Play", 4, 9),
-		Token(TokenType::SPACE, "", 4, 13),
-		Token(TokenType::ARROW, "", 4, 14),
-		Token(TokenType::SPACE, "", 4, 16),
-		Token(TokenType::CUSTOM_NAME, "RunningState", 4, 17),
-		Token(TokenType::NEW_LINE, "", 4, 29),
-		Token(TokenType::STAR_SLASH, "", 5, 1)						// -
+		Token(TokenType::ON, "", 3, 5),
+		Token(TokenType::SPACE, "", 3, 7),
+		Token(TokenType::CUSTOM_NAME, "Play", 3, 8),
+		Token(TokenType::SPACE, "", 3, 12),
+		Token(TokenType::ARROW, "", 3, 13),
+		Token(TokenType::SPACE, "", 3, 15),
+		Token(TokenType::CUSTOM_NAME, "RunningState", 3, 16),
+		Token(TokenType::NEW_LINE, "", 3, 28),
+		Token(TokenType::STAR_SLASH, "", 4, 0)                  // -
 	};
+
 	std::vector<Token> optimized = Optimizer::clearEverythingBeforeStar(tokens);
 
 
 	ASSERT_EQ(optimized.size(), 23);
 
-	EXPECT_EQ(optimized[0].type, TokenType::NEW_LINE);
-	EXPECT_EQ(optimized[1].type, TokenType::SPACE);
-	EXPECT_EQ(optimized[2].type, TokenType::CUSTOM_NAME);
-	EXPECT_EQ(optimized[3].type, TokenType::NEW_LINE);
-	EXPECT_EQ(optimized[4].type, TokenType::SPACE);
-	EXPECT_EQ(optimized[5].type, TokenType::SPACE);
-	EXPECT_EQ(optimized[6].type, TokenType::CUSTOM_NAME);
-	EXPECT_EQ(optimized[7].type, TokenType::SPACE);
-	EXPECT_EQ(optimized[8].type, TokenType::DEFAULT);
-	EXPECT_EQ(optimized[9].type, TokenType::SPACE);
-	EXPECT_EQ(optimized[10].type, TokenType::COMMENT);
-	EXPECT_EQ(optimized[11].type, TokenType::NEW_LINE);
-	EXPECT_EQ(optimized[12].type, TokenType::SPACE);
-	EXPECT_EQ(optimized[13].type, TokenType::SPACE);
-	EXPECT_EQ(optimized[14].type, TokenType::SPACE);
-	EXPECT_EQ(optimized[15].type, TokenType::ON);
-	EXPECT_EQ(optimized[16].type, TokenType::SPACE);
-	EXPECT_EQ(optimized[17].type, TokenType::CUSTOM_NAME);
-	EXPECT_EQ(optimized[18].type, TokenType::SPACE);
-	EXPECT_EQ(optimized[19].type, TokenType::ARROW);
-	EXPECT_EQ(optimized[20].type, TokenType::SPACE);
-	EXPECT_EQ(optimized[21].type, TokenType::CUSTOM_NAME);
-	EXPECT_EQ(optimized[22].type, TokenType::NEW_LINE);
+
+	validateToken(optimized[0], TokenType::NEW_LINE, "", 0, 2);
+	validateToken(optimized[1], TokenType::SPACE, "", 1, 2);
+	validateToken(optimized[2], TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3);
+	validateToken(optimized[3], TokenType::NEW_LINE, "", 1, 19);
+	validateToken(optimized[4], TokenType::SPACE, "", 2, 2);
+	validateToken(optimized[5], TokenType::SPACE, "", 2, 3);
+	validateToken(optimized[6], TokenType::CUSTOM_NAME, "IdleState", 2, 4);
+	validateToken(optimized[7], TokenType::SPACE, "", 2, 12);
+	validateToken(optimized[8], TokenType::DEFAULT, "", 2, 13);
+	validateToken(optimized[9], TokenType::SPACE, "", 2, 20);
+	validateToken(optimized[10], TokenType::COMMENT, " some comment  here   ", 2, 21);
+	validateToken(optimized[11], TokenType::NEW_LINE, "", 2, 46);
+	validateToken(optimized[12], TokenType::SPACE, "", 3, 2);
+	validateToken(optimized[13], TokenType::SPACE, "", 3, 3);
+	validateToken(optimized[14], TokenType::SPACE, "", 3, 4);
+	validateToken(optimized[15], TokenType::ON, "", 3, 5);
+	validateToken(optimized[16], TokenType::SPACE, "", 3, 7);
+	validateToken(optimized[17], TokenType::CUSTOM_NAME, "Play", 3, 8);
+	validateToken(optimized[18], TokenType::SPACE, "", 3, 12);
+	validateToken(optimized[19], TokenType::ARROW, "", 3, 13);
+	validateToken(optimized[20], TokenType::SPACE, "", 3, 15);
+	validateToken(optimized[21], TokenType::CUSTOM_NAME, "RunningState", 3, 16);
+	validateToken(optimized[22], TokenType::NEW_LINE, "", 3, 28);
+}
 
 
+TEST(OptimizerTest, clearStringEndings)
+{
+	std::vector<Token> tokens = {
+		Token(TokenType::NEW_LINE, "", 0, 2),
+		Token(TokenType::SPACE, "", 1, 2),
+		Token(TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3),
+		Token(TokenType::SPACE, "", 1, 19),							//new
+		Token(TokenType::SPACE, "", 2, 2),							//new
+		Token(TokenType::NEW_LINE, "", 1, 19),
+		Token(TokenType::SPACE, "", 2, 2),
+		Token(TokenType::SPACE, "", 2, 3),
+		Token(TokenType::CUSTOM_NAME, "IdleState", 2, 4),
+		Token(TokenType::SPACE, "", 2, 12),
+		Token(TokenType::DEFAULT, "", 2, 13),
+		Token(TokenType::SPACE, "", 2, 20),
+		Token(TokenType::COMMENT, " some comment  here   ", 2, 21),
+		Token(TokenType::NEW_LINE, "", 2, 46),
+		Token(TokenType::SPACE, "", 3, 2),
+		Token(TokenType::SPACE, "", 3, 3),
+		Token(TokenType::SPACE, "", 3, 4),
+		Token(TokenType::ON, "", 3, 5),
+		Token(TokenType::SPACE, "", 3, 7),
+		Token(TokenType::CUSTOM_NAME, "Play", 3, 8),
+		Token(TokenType::SPACE, "", 3, 12),
+		Token(TokenType::ARROW, "", 3, 13),
+		Token(TokenType::SPACE, "", 3, 15),
+		Token(TokenType::CUSTOM_NAME, "RunningState", 3, 16),
+		Token(TokenType::NEW_LINE, "", 3, 28),
+		Token(TokenType::SPACE, "", 4, 2),							//new
+	};
+
+	std::vector<Token> optimized = Optimizer::clearStringEndings(tokens);
+
+	ASSERT_EQ(optimized.size(), 23);
+
+
+	validateToken(optimized[0], TokenType::NEW_LINE, "", 0, 2);
+	validateToken(optimized[1], TokenType::SPACE, "", 1, 2);
+	validateToken(optimized[2], TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3);
+	validateToken(optimized[3], TokenType::NEW_LINE, "", 1, 19);
+	validateToken(optimized[4], TokenType::SPACE, "", 2, 2);
+	validateToken(optimized[5], TokenType::SPACE, "", 2, 3);
+	validateToken(optimized[6], TokenType::CUSTOM_NAME, "IdleState", 2, 4);
+	validateToken(optimized[7], TokenType::SPACE, "", 2, 12);
+	validateToken(optimized[8], TokenType::DEFAULT, "", 2, 13);
+	validateToken(optimized[9], TokenType::SPACE, "", 2, 20);
+	validateToken(optimized[10], TokenType::COMMENT, " some comment  here   ", 2, 21);
+	validateToken(optimized[11], TokenType::NEW_LINE, "", 2, 46);
+	validateToken(optimized[12], TokenType::SPACE, "", 3, 2);
+	validateToken(optimized[13], TokenType::SPACE, "", 3, 3);
+	validateToken(optimized[14], TokenType::SPACE, "", 3, 4);
+	validateToken(optimized[15], TokenType::ON, "", 3, 5);
+	validateToken(optimized[16], TokenType::SPACE, "", 3, 7);
+	validateToken(optimized[17], TokenType::CUSTOM_NAME, "Play", 3, 8);
+	validateToken(optimized[18], TokenType::SPACE, "", 3, 12);
+	validateToken(optimized[19], TokenType::ARROW, "", 3, 13);
+	validateToken(optimized[20], TokenType::SPACE, "", 3, 15);
+	validateToken(optimized[21], TokenType::CUSTOM_NAME, "RunningState", 3, 16);
+	validateToken(optimized[22], TokenType::NEW_LINE, "", 3, 28);
 }
