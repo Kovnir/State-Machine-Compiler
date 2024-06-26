@@ -6,6 +6,7 @@
 #include "Token.cpp"
 #include "Tokenizer.h"
 #include "Optimizer.h"
+#include "SyntaxTree.h"
 
 
 void PrintTokens(std::vector<Token> tokens);
@@ -65,6 +66,14 @@ int main()
 	tokens = Optimizer::removeSpacesInMiddle(tokens);
 	PrintTokens(tokens);
 
+	//TODO: remove comments at least for a while
+
+	SyntaxTree syntaxTree;
+	
+	for (const auto& token : tokens)
+	{
+		syntaxTree.addToken(token);
+	}
 
 	return 0;
 }

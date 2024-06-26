@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <string>
 
-enum TokenType
+enum class TokenType
 {
 	SLASH_STAR,
 	SPACE,
@@ -30,7 +30,7 @@ public:
 	std::string toString() const
 	{
 		std::string result = "[";
-		result += TokenTypeNames[type];
+		result += TokenTypeNames[(int) type];
 		if (type == TokenType::CUSTOM_NAME || type == TokenType::COMMENT)
 		{
 			result += " (" + value + ")";
@@ -54,7 +54,7 @@ private:
 	};
 
 	// statically check that the size of array fits the number of enum values
-	static_assert(sizeof(Token::TokenTypeNames) / sizeof(char*) == TokenType::SIZE_OF_ENUM
+	static_assert(sizeof(Token::TokenTypeNames) / sizeof(char*) == (int) TokenType::SIZE_OF_ENUM
 		, "sizes dont match");
 };
 
