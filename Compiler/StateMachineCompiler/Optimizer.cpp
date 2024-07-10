@@ -142,11 +142,12 @@ std::vector<Token> Optimizer::clearDoubleNewLines(std::vector<Token> tokens)
 	std::vector<Token> optimized;
 	auto size = (int)tokens.size();
 
-	for (int i = 0; i < size - 1; i++)
+	for (int i = 0; i < size; i++)
 	{
 		if (tokens[i].type == TokenType::NEW_LINE)
 		{
-			if (tokens[i + 1].type == TokenType::NEW_LINE)
+			int nextId = i + 1;
+			if (nextId < size && tokens[nextId].type == TokenType::NEW_LINE)
 			{
 				continue;
 			}
@@ -166,6 +167,22 @@ std::vector<Token> Optimizer::clearAllSpaces(std::vector<Token> tokens)
 	for (int i = 0; i < size; i++)
 	{
 		if (tokens[i].type != TokenType::SPACE)
+		{
+			optimized.push_back(tokens[i]);
+		}
+	}
+
+	return optimized;
+}
+
+std::vector<Token> Optimizer::clearAllComments(std::vector<Token> tokens)
+{
+	std::vector<Token> optimized;
+	auto size = (int)tokens.size();
+
+	for (int i = 0; i < size; i++)
+	{
+		if (tokens[i].type != TokenType::COMMENT)
 		{
 			optimized.push_back(tokens[i]);
 		}

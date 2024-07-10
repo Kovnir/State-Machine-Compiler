@@ -219,3 +219,67 @@ TEST(OptimizerTest, clearAllSpaces)
 	validateToken(optimized[9], TokenType::CUSTOM_NAME, "RunningState", 3, 16);
 	validateToken(optimized[10], TokenType::NEW_LINE, "", 3, 28);
 }
+
+TEST(OptimizerTest, clearDoubleNewLines)
+{
+	std::vector<Token> tokens = {
+		Token(TokenType::NEW_LINE, "", 0, 1),
+		Token(TokenType::NEW_LINE, "", 1, 1),
+		Token(TokenType::NEW_LINE, "", 2, 1),
+		Token(TokenType::SPACE, "", 3, 2),
+		Token(TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3),
+		Token(TokenType::NEW_LINE, "", 1, 19),
+		Token(TokenType::SPACE, "", 1, 19),
+		Token(TokenType::SPACE, "", 2, 2),
+		Token(TokenType::NEW_LINE, "", 1, 19),
+		Token(TokenType::NEW_LINE, "", 3, 28),
+		Token(TokenType::SPACE, "", 4, 2),
+	};
+
+	std::vector<Token> optimized = Optimizer::clearDoubleNewLines(tokens);
+
+	ASSERT_EQ(optimized.size(), 8);
+
+	validateToken(optimized[0], TokenType::NEW_LINE, "", 2, 1);
+	validateToken(optimized[1], TokenType::SPACE, "", 3, 2);
+	validateToken(optimized[2], TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3);
+	validateToken(optimized[3], TokenType::NEW_LINE, "", 1, 19);
+	validateToken(optimized[4], TokenType::SPACE, "", 1, 19);
+	validateToken(optimized[5], TokenType::SPACE, "", 2, 2);
+	validateToken(optimized[6], TokenType::NEW_LINE, "", 3, 28);
+	validateToken(optimized[7], TokenType::SPACE, "", 4, 2);
+
+}
+
+TEST(OptimizerTest, clearAllComments)
+{
+	std::vector<Token> tokens = {
+		Token(TokenType::COMMENT, " some comment  here   ", 2, 21), // remove
+		Token(TokenType::NEW_LINE, "", 2, 46),
+		Token(TokenType::SPACE, "", 3, 0),
+		Token(TokenType::STAR, "", 3, 1),
+		Token(TokenType::SLASH_STAR, "", 0, 0),
+		Token(TokenType::NEW_LINE, "", 0, 2),
+		Token(TokenType::SPACE, "", 1, 0),
+		Token(TokenType::COMMENT, " some comment  here   ", 2, 21), // remove
+		Token(TokenType::COMMENT, " some comment  here   ", 2, 21), // remove
+		Token(TokenType::NEW_LINE, "", 2, 46),
+	};
+
+	std::vector<Token> optimized = Optimizer::clearAllComments(tokens);
+
+	ASSERT_EQ(optimized.size(), 7);
+
+
+	validateToken(optimized[0], TokenType::NEW_LINE, "", 2, 46);
+	validateToken(optimized[1], TokenType::SPACE, "", 3, 0);
+	validateToken(optimized[2], TokenType::STAR, "", 3, 1);
+	validateToken(optimized[3], TokenType::SLASH_STAR, "", 0, 0);
+	validateToken(optimized[4], TokenType::NEW_LINE, "", 0, 2);
+	validateToken(optimized[5], TokenType::SPACE, "", 1, 0);
+	validateToken(optimized[6], TokenType::NEW_LINE, "", 2, 46);
+
+}
+
+
+

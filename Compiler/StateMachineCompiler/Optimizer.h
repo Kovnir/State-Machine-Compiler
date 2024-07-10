@@ -14,4 +14,5 @@ public:
 	static std::vector<Token> clearNewLinesOnEnd(std::vector<Token> tokens);
 	static std::vector<Token> clearDoubleNewLines(std::vector<Token> tokens);
 	static std::vector<Token> clearAllSpaces(std::vector<Token> tokens);
+	static std::vector<Token> clearAllComments(std::vector<Token> tokens);
 };

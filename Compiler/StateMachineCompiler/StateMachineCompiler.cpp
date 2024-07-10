@@ -71,7 +71,10 @@ int main()
 	tokens = Optimizer::clearAllSpaces(tokens);
 	PrintTokens(tokens);
 
-	//TODO: remove comments at least for a while
+	std::cout << std::endl << "======== clearAllComments =======" << std::endl;
+	tokens = Optimizer::clearAllComments(tokens);
+	PrintTokens(tokens);
+
 
 	SyntaxTree syntaxTree;
 	
