@@ -131,7 +131,8 @@ void SyntaxTree::HandleTrigger(Token& val)
 		//?????
 		return;
 	case TokenType::DEFAULT:
-		state->isDefault = true;
+		//?????
+//		state->isDefault = true;
 		return;
 	case TokenType::COMMENT:
 		state->comment = val.value;
