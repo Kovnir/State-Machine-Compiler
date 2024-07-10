@@ -42,28 +42,33 @@ int main()
 
 	PrintTokens(tokens);
 
-	std::cout << std::endl << "======== ClearEverythingBeforeStar =======" << std::endl;
+	std::cout << std::endl << "======== clearEverythingBeforeAndAfterStarSlash =======" << std::endl;
+	tokens = Optimizer::clearEverythingBeforeAndAfterStarSlash(tokens);
+	PrintTokens(tokens);
+
+	std::cout << std::endl << "======== clearEverythingBeforeStar =======" << std::endl;
 	tokens = Optimizer::clearEverythingBeforeStar(tokens);
 	PrintTokens(tokens);
 
-	std::cout << std::endl << "======== ClearStringEndings =======" << std::endl;
-	tokens = Optimizer::clearStringEndings(tokens);
+
+	std::cout << std::endl << "======== clearNewLinesOnStart =======" << std::endl;
+	tokens = Optimizer::clearNewLinesOnStart(tokens);
 	PrintTokens(tokens);
 
-	std::cout << std::endl << "======== ClearNewLinesOnStart =======" << std::endl;
-	tokens = Optimizer::clearNewLinesOnStart(tokens);
+	std::cout << std::endl << "======== clearNewLinesOnEnd =======" << std::endl;
+	tokens = Optimizer::clearNewLinesOnEnd(tokens);
 	PrintTokens(tokens);
 
 	std::cout << std::endl << "======== ClearNewLinesOnEnd =======" << std::endl;
 	tokens = Optimizer::clearNewLinesOnEnd(tokens);
 	PrintTokens(tokens);
 
-	std::cout << std::endl << "======== ClearSpacesOnStart =======" << std::endl;
-	tokens = Optimizer::clearSpacesOnStart(tokens);
+	std::cout << std::endl << "======== clearDoubleNewLines =======" << std::endl;
+	tokens = Optimizer::clearDoubleNewLines(tokens);
 	PrintTokens(tokens);
 
-	std::cout << std::endl << "======== RemoveSpacesInMiddle =======" << std::endl;
-	tokens = Optimizer::removeSpacesInMiddle(tokens);
+	std::cout << std::endl << "======== removeAllSpaces =======" << std::endl;
+	tokens = Optimizer::clearAllSpaces(tokens);
 	PrintTokens(tokens);
 
 	//TODO: remove comments at least for a while

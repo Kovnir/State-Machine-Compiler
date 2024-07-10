@@ -1,6 +1,44 @@
 #include "Optimizer.h"
 
 
+//if definition started from /* we need to remove everything before /* and after */
+std::vector<Token> Optimizer::clearEverythingBeforeAndAfterStarSlash(std::vector<Token> tokens)
+{
+	std::vector<Token> optimized;
+	auto size = (int)tokens.size();
+
+	int startPosition = -1;
+	int endPosition = -1;
+
+	for (int i = 0; i < size; i++)
+	{
+		if (tokens[i].type == TokenType::SLASH_STAR) // /*
+		{
+			if (startPosition == -1)
+			{
+				startPosition = i;
+			}
+		}
+
+		if (tokens[i].type == TokenType::STAR_SLASH) // */
+		{
+			endPosition = i;
+			break;
+		}
+	}
+
+	if (startPosition != -1 && endPosition != -1)
+	{
+		optimized.insert(optimized.end(), tokens.begin() + startPosition + 1, tokens.begin() + endPosition);
+	}
+	else
+	{
+		optimized = tokens;
+	}
+
+	return optimized;
+}
+
 
 std::vector<Token> Optimizer::clearEverythingBeforeStar(std::vector<Token> tokens)
 {
@@ -33,39 +71,9 @@ std::vector<Token> Optimizer::clearEverythingBeforeStar(std::vector<Token> token
 	return optimized;
 }
 
-std::vector<Token> Optimizer::clearStringEndings(std::vector<Token> tokens)
-{
-	std::vector<Token> optimized;
-	auto size = (int)tokens.size();
-
-	std::vector<Token> skiped;
 
 
-	for (int i = 0; i < size; i++)
-	{
-		if (tokens[i].type == TokenType::SPACE)
-		{
-			skiped.push_back(tokens[i]);
-		}
-		else
-		{
-			if (tokens[i].type == TokenType::NEW_LINE)
-			{
-				skiped.clear();
-				optimized.push_back(tokens[i]);
-			}
-			else
-			{
-				optimized.insert(optimized.end(), skiped.begin(), skiped.end());
-				skiped.clear();
-				optimized.push_back(tokens[i]);
-			}
-		}
-	}
-
-	return optimized;
-}
-
+// if there are a few new line before code starts - remove them
 std::vector<Token> Optimizer::clearNewLinesOnStart(std::vector<Token> tokens)
 {
 	std::vector<Token> optimized;
@@ -92,6 +100,7 @@ std::vector<Token> Optimizer::clearNewLinesOnStart(std::vector<Token> tokens)
 	return optimized;
 }
 
+// if there are a few new line after code ends - remove them
 std::vector<Token> Optimizer::clearNewLinesOnEnd(std::vector<Token> tokens)
 {
 	std::vector<Token> optimized;
@@ -128,84 +137,37 @@ std::vector<Token> Optimizer::clearNewLinesOnEnd(std::vector<Token> tokens)
 	return optimized;
 }
 
-
-std::vector<Token> Optimizer::clearSpacesOnStart(std::vector<Token> tokens)
+std::vector<Token> Optimizer::clearDoubleNewLines(std::vector<Token> tokens)
 {
 	std::vector<Token> optimized;
 	auto size = (int)tokens.size();
 
-	int minCount = INT_MAX;
-	int currentCount = 0;
-
-
-	bool startFound = false;
-	// remove spaces before new lines
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size - 1; i++)
 	{
-		if (tokens[i].type != TokenType::SPACE)
-		{
-			startFound = true;
-		}
-
-		if (!startFound)
-		{
-			currentCount++;
-		}
-
 		if (tokens[i].type == TokenType::NEW_LINE)
 		{
-			if (currentCount < minCount)
+			if (tokens[i + 1].type == TokenType::NEW_LINE)
 			{
-				minCount = currentCount;
+				continue;
 			}
-			currentCount = 0;
-			startFound = false;
 		}
-	}
 
-	currentCount = 0;
-	for (int i = 0; i < size; i++)
-	{
-		currentCount++;
-		if (currentCount > minCount)
-		{
-			optimized.push_back(tokens[i]);
-		}
-		if (tokens[i].type == TokenType::NEW_LINE)
-		{
-			currentCount = 0;
-		}
+		optimized.push_back(tokens[i]);
 	}
 
 	return optimized;
 }
 
-std::vector<Token> Optimizer::removeSpacesInMiddle(std::vector<Token> tokens)
+std::vector<Token> Optimizer::clearAllSpaces(std::vector<Token> tokens)
 {
 	std::vector<Token> optimized;
 	auto size = (int)tokens.size();
 
-
-	bool contentFound = false;
-	// remove spaces before new lines
 	for (int i = 0; i < size; i++)
 	{
 		if (tokens[i].type != TokenType::SPACE)
 		{
 			optimized.push_back(tokens[i]);
-			contentFound = true;
-		}
-		else
-		{
-			if (!contentFound)
-			{
-				optimized.push_back(tokens[i]);
-			}
-		}
-
-		if (tokens[i].type == TokenType::NEW_LINE)
-		{
-			contentFound = false;
 		}
 	}
 
