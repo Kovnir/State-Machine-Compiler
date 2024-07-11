@@ -14,8 +14,7 @@ enum class NodeType
 {
 	STATE_MACHINE,
 	STATE,
-	TRIGGER,
-	SIZE_OF_ENUM,
+	TRIGGER
 };
 
 struct TreeNode;
@@ -25,34 +24,43 @@ struct Trigger;
 
 struct TreeNode {
 	Token data;
-	std::string comment;
+	//	std::string comment;
 
-	explicit TreeNode(Token const& val) : data(val) {}
-	virtual NodeType getType() const = 0; // виртуальный метод
+	explicit TreeNode(const Token val) : data(val) {}
+	virtual NodeType getType() const = 0;
 };
 
 struct StateMachine : public TreeNode {
 	using TreeNode::TreeNode;
 	std::vector<std::unique_ptr<State>> states;
-	/*TreeNode* addChild(Token val) {
-		auto child = std::make_unique<TreeNode>(val);
-		TreeNode* childPtr = child.get();
-		children.push_back(std::move(child));
+	State* addState(const Token* val) {
+		auto child = std::make_unique<State>(*val);
+		State* childPtr = child.get();
+		states.push_back(std::move(child));
 		return childPtr;
-	}*/
+	}
 	NodeType getType() const override { return NodeType::STATE_MACHINE; }
-};
-
-struct State : public TreeNode {
-
-	using TreeNode::TreeNode;
-	bool isDefault = false;
-	NodeType getType() const override { return NodeType::STATE; }
 };
 
 struct Trigger : public TreeNode {
 	using TreeNode::TreeNode;
+	State* rootState = nullptr;
 	std::string condition;
-	std::string targetStateSting;
+	std::string targetStateString;
 	NodeType getType() const override { return NodeType::TRIGGER; }
 };
+
+struct State : public TreeNode {
+	using TreeNode::TreeNode;
+	bool isDefault = false;
+	std::vector<std::unique_ptr<Trigger>> triggers;
+	Trigger* addTrigger(const Token& val) {
+		auto trigger = std::make_unique<Trigger>(val);
+		trigger->rootState = this;
+		Trigger* childPtr = trigger.get();
+		triggers.push_back(std::move(trigger));
+		return childPtr;
+	}
+	NodeType getType() const override { return NodeType::STATE; }
+};
+

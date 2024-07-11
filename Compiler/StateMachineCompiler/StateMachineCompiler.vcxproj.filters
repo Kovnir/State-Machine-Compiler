@@ -45,12 +45,12 @@
     <ClCompile Include="ErrorChecker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TokenSequence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tokenizer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SintaxTreeBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SyntaxTree.h">

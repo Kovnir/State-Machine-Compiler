@@ -1,16 +1,20 @@
 #pragma once
 #include "TreeNode.cpp"
+#include "TokenSequence.cpp"
 
 
 class SyntaxTree
 {
+private:
+	void parseTokensInner(const std::vector<Token>& tokens);
+	const Token* PickWithValidation(TokenSequence& seq, bool allowNull);
+	const void CreateRootNode(const Token* val);
+	const void ValidateTokenType(const Token* val);
+	const void Throw(std::string error, const Token* token);
+	std::unique_ptr<StateMachine> root = nullptr;
+	TreeNode* current = nullptr;
 public:
 	SyntaxTree() = default;
-	void addToken(Token val);
-	void HandleStateMachine(Token& val);
-	void HandleState(Token& val);
-	void HandleTrigger(Token& val);
-	std::unique_ptr<TreeNode> root = nullptr;
-	TreeNode* current = nullptr;
+	std::string parseTokens(const std::vector<Token>& tokens);
 };
 

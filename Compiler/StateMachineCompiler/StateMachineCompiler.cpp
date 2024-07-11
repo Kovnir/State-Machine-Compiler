@@ -100,11 +100,7 @@ int main()
 	/*-----------------------------------------------*/
 
 	SyntaxTree syntaxTree;
-	
-	for (const auto& token : tokens)
-	{
-		syntaxTree.addToken(token);
-	}
+	syntaxTree.parseTokens(tokens);
 
 	return 0;
 }

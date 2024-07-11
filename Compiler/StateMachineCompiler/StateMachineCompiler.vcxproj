@@ -130,16 +130,15 @@
     <ClCompile Include="ErrorChecker.cpp" />
     <ClCompile Include="Optimizer.cpp" />
     <ClCompile Include="Optimizer.h" />
-    <ClCompile Include="SintaxTreeBuilder.cpp" />
     <ClCompile Include="StateMachineCompiler.cpp" />
     <ClCompile Include="SyntaxTree.cpp" />
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="Tokenizer.cpp" />
+    <ClCompile Include="TokenSequence.cpp" />
     <ClCompile Include="TreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ErrorChecker.h" />
-    <ClInclude Include="SintaxTreeBuilder.h" />
     <ClInclude Include="SyntaxTree.h" />
     <ClInclude Include="Tokenizer.h" />
   </ItemGroup>
