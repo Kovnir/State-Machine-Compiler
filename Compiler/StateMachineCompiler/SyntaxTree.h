@@ -11,10 +11,10 @@ private:
 	const void CreateRootNode(const Token* val);
 	const void ValidateTokenType(const Token* val);
 	const void Throw(std::string error, const Token* token);
-	std::unique_ptr<StateMachine> root = nullptr;
 	TreeNode* current = nullptr;
 public:
 	SyntaxTree() = default;
 	std::string parseTokens(const std::vector<Token>& tokens);
+	std::unique_ptr<StateMachine> root = nullptr;
 };
 

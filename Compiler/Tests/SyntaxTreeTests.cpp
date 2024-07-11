@@ -38,7 +38,7 @@ TEST(SyntaxTree, parseTokens)
 		Token(TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3),
 		Token(TokenType::NEW_LINE, "", 1, 19),
 
-		Token(TokenType::CUSTOM_NAME, "IdleState", 2, 4),
+		Token(TokenType::CUSTOM_NAME, "IdleState", 2, 4),    //state IdleState
 		Token(TokenType::DEFAULT, "", 2, 13),
 		Token(TokenType::NEW_LINE, "", 2, 14),
 
@@ -48,7 +48,7 @@ TEST(SyntaxTree, parseTokens)
 		Token(TokenType::CUSTOM_NAME, "RunningState", 3, 10),
 		Token(TokenType::NEW_LINE, "", 3, 22),
 
-		Token(TokenType::CUSTOM_NAME, "RunningState", 4, 4),
+		Token(TokenType::CUSTOM_NAME, "RunningState", 4, 4), //state RunningState
 		Token(TokenType::NEW_LINE, "", 4, 15),
 
 		Token(TokenType::ON, "", 5, 0),
@@ -69,7 +69,7 @@ TEST(SyntaxTree, parseTokens)
 		Token(TokenType::CUSTOM_NAME, "IdleState", 7, 12),
 		Token(TokenType::NEW_LINE, "", 7, 21),
 
-		Token(TokenType::CUSTOM_NAME, "PausedState", 8, 4),
+		Token(TokenType::CUSTOM_NAME, "PausedState", 8, 4), //state PausedState
 		Token(TokenType::NEW_LINE, "", 8, 15),
 
 		Token(TokenType::ON, "", 9, 0),
@@ -84,7 +84,7 @@ TEST(SyntaxTree, parseTokens)
 		Token(TokenType::CUSTOM_NAME, "IdleState", 10, 12),
 		Token(TokenType::NEW_LINE, "", 10, 21),
 
-		Token(TokenType::CUSTOM_NAME, "FinishedState", 11, 4),
+		Token(TokenType::CUSTOM_NAME, "FinishedState", 11, 4), //state FinishedState
 		Token(TokenType::NEW_LINE, "", 11, 17),
 
 		Token(TokenType::ON, "", 12, 0),
@@ -97,5 +97,75 @@ TEST(SyntaxTree, parseTokens)
 	SyntaxTree syntaxTree;
 	std::string error = syntaxTree.parseTokens(tokens);
 
-//	EXPECT_EQ(error, "");
+	EXPECT_EQ(error, "");
+
+	//get syntaxTree.root
+	StateMachine* root = syntaxTree.root.get();
+
+	EXPECT_EQ(root->data.value, "TestStateMachine");
+	EXPECT_EQ(root->states.size(), 4);
+
+	/*-----------------------*/
+	//IdleState
+	State* idleState = root->states[0].get();
+	EXPECT_EQ(idleState->data.value, "IdleState");
+	EXPECT_EQ(idleState->isDefault, true);
+	EXPECT_EQ(idleState->triggers.size(), 1);
+
+	//on Play -> RunningState
+	Trigger* trigger = idleState->triggers[0].get();
+	EXPECT_EQ(trigger->condition, "Play");
+	EXPECT_EQ(trigger->targetStateString, "RunningState");
+
+	/*-----------------------*/
+	//RunningState
+	State* runningState = root->states[1].get();
+	EXPECT_EQ(runningState->data.value, "RunningState");
+	EXPECT_EQ(runningState->isDefault, false);
+	EXPECT_EQ(runningState->triggers.size(), 3);
+
+	//on Pause -> PausedState
+	trigger = runningState->triggers[0].get();
+	EXPECT_EQ(trigger->condition, "Pause");
+	EXPECT_EQ(trigger->targetStateString, "PausedState");
+
+	//on Finish -> FinishedState
+	trigger = runningState->triggers[1].get();
+	EXPECT_EQ(trigger->condition, "Finish");
+	EXPECT_EQ(trigger->targetStateString, "FinishedState");
+
+	//on Stop -> IdleState
+	trigger = runningState->triggers[2].get();
+	EXPECT_EQ(trigger->condition, "Stop");
+	EXPECT_EQ(trigger->targetStateString, "IdleState");
+	
+	/*-----------------------*/
+	//PausedState
+	State* pausedState = root->states[2].get();
+	EXPECT_EQ(pausedState->data.value, "PausedState");
+	EXPECT_EQ(pausedState->isDefault, false);
+	EXPECT_EQ(pausedState->triggers.size(), 2);
+
+	//on Resume -> RunningState
+	trigger = pausedState->triggers[0].get();
+	EXPECT_EQ(trigger->condition, "Resume");
+	EXPECT_EQ(trigger->targetStateString, "RunningState");
+
+	//on Stop -> IdleState
+	trigger = pausedState->triggers[1].get();
+	EXPECT_EQ(trigger->condition, "Stop");
+	EXPECT_EQ(trigger->targetStateString, "IdleState");
+
+	/*-----------------------*/
+	//FinishedState
+	State* finishedState = root->states[3].get();
+	EXPECT_EQ(finishedState->data.value, "FinishedState");
+	EXPECT_EQ(finishedState->isDefault, false);
+	EXPECT_EQ(finishedState->triggers.size(), 1);
+
+	//on Replay -> RunningState
+	trigger = finishedState->triggers[0].get();
+	EXPECT_EQ(trigger->condition, "Replay");
+	EXPECT_EQ(trigger->targetStateString, "RunningState");
+
 }
