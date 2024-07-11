@@ -8,6 +8,7 @@
 #include "Optimizer.h"
 #include "SyntaxTree.h"
 #include "ErrorChecker.h"
+#include "SyntaxTreeValidator.h"
 
 
 void PrintTokens(const std::vector<Token>& tokens);
@@ -100,7 +101,19 @@ int main()
 	/*-----------------------------------------------*/
 
 	SyntaxTree syntaxTree;
-	syntaxTree.parseTokens(tokens);
+	std::string error = syntaxTree.parseTokens(tokens);
+
+	if (!error.empty())
+	{
+		std::cout << "Error: " << error << std::endl;
+		return 1;
+	}
+
+	CodeGenerator codeGenerator;
+	StateMachine* root = syntaxTree.root.get();
+	std::string code = codeGenerator.generate(*root);
+
+	std::cout << std::endl << "Generated code: " << std::endl << code << std::endl;
 
 	return 0;
 }

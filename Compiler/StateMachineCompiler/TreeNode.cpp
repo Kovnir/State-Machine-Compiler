@@ -1,4 +1,5 @@
-﻿#include "Token.cpp"
+﻿#pragma once
+#include "Token.cpp"
 #include <iostream>
 #include <memory>
 #include <vector>

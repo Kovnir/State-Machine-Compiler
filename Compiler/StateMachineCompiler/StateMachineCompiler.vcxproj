@@ -132,6 +132,7 @@
     <ClCompile Include="Optimizer.h" />
     <ClCompile Include="StateMachineCompiler.cpp" />
     <ClCompile Include="SyntaxTree.cpp" />
+    <ClCompile Include="SyntaxTreeValidator.cpp" />
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="Tokenizer.cpp" />
     <ClCompile Include="TokenSequence.cpp" />
@@ -140,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="ErrorChecker.h" />
     <ClInclude Include="SyntaxTree.h" />
+    <ClInclude Include="SyntaxTreeValidator.h" />
     <ClInclude Include="Tokenizer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
