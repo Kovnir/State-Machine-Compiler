@@ -7,9 +7,10 @@
 #include "Tokenizer.h"
 #include "Optimizer.h"
 #include "SyntaxTree.h"
+#include "ErrorChecker.h"
 
 
-void PrintTokens(std::vector<Token> tokens);
+void PrintTokens(const std::vector<Token>& tokens);
 
 int main()
 {
@@ -42,6 +43,8 @@ int main()
 
 	PrintTokens(tokens);
 
+	/*-----------------------------------------------*/
+
 	std::cout << std::endl << "======== clearEverythingBeforeAndAfterStarSlash =======" << std::endl;
 	tokens = Optimizer::clearEverythingBeforeAndAfterStarSlash(tokens);
 	PrintTokens(tokens);
@@ -49,7 +52,6 @@ int main()
 	std::cout << std::endl << "======== clearEverythingBeforeStar =======" << std::endl;
 	tokens = Optimizer::clearEverythingBeforeStar(tokens);
 	PrintTokens(tokens);
-
 
 	std::cout << std::endl << "======== clearNewLinesOnStart =======" << std::endl;
 	tokens = Optimizer::clearNewLinesOnStart(tokens);
@@ -75,6 +77,27 @@ int main()
 	tokens = Optimizer::clearAllComments(tokens);
 	PrintTokens(tokens);
 
+	/*-----------------------------------------------*/
+
+
+	std::vector<std::string> errors = ErrorChecker::checkErrors(tokens);
+
+	if (!errors.empty())
+	{
+		std::cout << "Errors Count: " << errors.size() << std::endl;
+		for (const auto& error : errors)
+		{
+			std::cout << error << std::endl;
+		}
+		return 1;
+	}
+	else
+	{
+		std::cout << "No errors found" << std::endl;
+	}
+
+
+	/*-----------------------------------------------*/
 
 	SyntaxTree syntaxTree;
 	
@@ -86,7 +109,7 @@ int main()
 	return 0;
 }
 
-void PrintTokens(std::vector<Token> tokens)
+void PrintTokens(const std::vector<Token> &tokens)
 {
 	std::cout << "Tokens Count: " << tokens.size() << std::endl;
 	for (const auto& token : tokens)

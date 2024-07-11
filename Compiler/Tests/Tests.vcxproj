@@ -99,6 +99,7 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ErrorCheckerTests.cpp" />
     <ClCompile Include="ParserTests.cpp" />
     <ClCompile Include="OptimizerTests.cpp" />
     <ClCompile Include="pch.cpp">
