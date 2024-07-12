@@ -2,6 +2,10 @@
 
 void Logger::printTokens(const std::vector<Token>& tokens) const
 {
+	if (!debugMode)
+	{
+		return;
+	}
 	std::cout << "Tokens Count: " << tokens.size() << std::endl;
 	for (const auto& token : tokens)
 	{
@@ -12,7 +16,11 @@ void Logger::printTokens(const std::vector<Token>& tokens) const
 
 void Logger::printHeader(const std::string& header) const
 {
-	std::cout << std::endl << "======== " << header <<" =======" << std::endl;
+	if (!debugMode)
+	{
+		return;
+	}
+	std::cout << std::endl << "======== " << header << " =======" << std::endl;
 }
 
 void Logger::printErrors(const std::vector<std::string>& errors) const
@@ -31,11 +39,19 @@ void Logger::printError(const std::string& error) const
 
 void Logger::printNoErrors() const
 {
+	if (!debugMode)
+	{
+		return;
+	}
 	std::cout << "No errors found" << std::endl;
 }
 
 void Logger::printCode(const std::string& code) const
 {
+	if (!debugMode)
+	{
+		return;
+	}
 	std::cout << std::endl << "Generated code: " << std::endl << code << std::endl;
 }
 

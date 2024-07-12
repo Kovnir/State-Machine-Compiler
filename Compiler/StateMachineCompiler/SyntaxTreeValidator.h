@@ -3,9 +3,11 @@
 class CodeGenerator
 {
 public:
-    std::string generate(const StateMachine& stateMachine);
+    // Disallow creating an instance of this object
+    CodeGenerator() = delete;
+    static std::string generate(const StateMachine& stateMachine);
 private:
-    std::string generateCSharpCode(
+    static std::string generateCSharpCode(
         const std::string& stateMachineName,
         const std::vector<std::string>& source,
         const std::vector<std::string>& triggersNames,

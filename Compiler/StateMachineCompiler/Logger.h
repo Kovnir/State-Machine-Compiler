@@ -5,7 +5,11 @@
 
 class Logger
 {
+private:
+	bool debugMode = false;
+
 public:
+	explicit Logger(bool debugMode) : debugMode(debugMode) {}
 	void printTokens(const std::vector<Token>& tokens) const;
 	void printHeader(const std::string& header) const;
 	void printErrors(const std::vector<std::string>& errors) const;
@@ -13,6 +17,5 @@ public:
 	void printNoErrors() const;
 	void printCode(const std::string& code) const;
 	void printDone() const;
-
 };
 

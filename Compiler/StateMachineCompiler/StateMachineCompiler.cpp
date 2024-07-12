@@ -39,7 +39,7 @@ int main()
     *     on Pause -> PausedState    
     */
 )";
-	Logger logger;
+	Logger logger = Logger(true);
 
 	std::vector<Token> tokens = Tokenizer::parse(input);
 
@@ -106,12 +106,11 @@ int main()
 		return 1;
 	}
 
-	CodeGenerator codeGenerator;
 	StateMachine* root = syntaxTree.root.get();
 	std::string code;
 	try
 	{
-		code = codeGenerator.generate(*root);
+		code = CodeGenerator::generate(*root);
 	}
 	catch (const std::exception& e)
 	{
