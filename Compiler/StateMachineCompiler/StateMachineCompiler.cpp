@@ -9,9 +9,9 @@
 #include "SyntaxTree.h"
 #include "ErrorChecker.h"
 #include "SyntaxTreeValidator.h"
+#include "Logger.h"
 
 
-void PrintTokens(const std::vector<Token>& tokens);
 
 int main()
 {
@@ -39,44 +39,45 @@ int main()
     *     on Pause -> PausedState    
     */
 )";
+	Logger logger;
 
 	std::vector<Token> tokens = Tokenizer::parse(input);
 
-	PrintTokens(tokens);
+	logger.printTokens(tokens);
 
 	/*-----------------------------------------------*/
 
-	std::cout << std::endl << "======== clearEverythingBeforeAndAfterStarSlash =======" << std::endl;
+	logger.printHeader("clearEverythingBeforeAndAfterStarSlash");
 	tokens = Optimizer::clearEverythingBeforeAndAfterStarSlash(tokens);
-	PrintTokens(tokens);
+	logger.printTokens(tokens);
 
-	std::cout << std::endl << "======== clearEverythingBeforeStar =======" << std::endl;
+	logger.printHeader("clearEverythingBeforeStar");
 	tokens = Optimizer::clearEverythingBeforeStar(tokens);
-	PrintTokens(tokens);
+	logger.printTokens(tokens);
 
-	std::cout << std::endl << "======== clearNewLinesOnStart =======" << std::endl;
+	logger.printHeader("clearNewLinesOnStart");
 	tokens = Optimizer::clearNewLinesOnStart(tokens);
-	PrintTokens(tokens);
+	logger.printTokens(tokens);
 
-	std::cout << std::endl << "======== clearNewLinesOnEnd =======" << std::endl;
+	logger.printHeader("clearNewLinesOnEnd");
 	tokens = Optimizer::clearNewLinesOnEnd(tokens);
-	PrintTokens(tokens);
+	logger.printTokens(tokens);
 
-	std::cout << std::endl << "======== ClearNewLinesOnEnd =======" << std::endl;
+	logger.printHeader("ClearNewLinesOnEnd");
 	tokens = Optimizer::clearNewLinesOnEnd(tokens);
-	PrintTokens(tokens);
+	logger.printTokens(tokens);
 
-	std::cout << std::endl << "======== clearDoubleNewLines =======" << std::endl;
+	logger.printHeader("clearDoubleNewLines");
 	tokens = Optimizer::clearDoubleNewLines(tokens);
-	PrintTokens(tokens);
+	logger.printTokens(tokens);
 
-	std::cout << std::endl << "======== removeAllSpaces =======" << std::endl;
+	logger.printHeader("removeAllSpaces");
 	tokens = Optimizer::clearAllSpaces(tokens);
-	PrintTokens(tokens);
+	logger.printTokens(tokens);
 
-	std::cout << std::endl << "======== clearAllComments =======" << std::endl;
+	logger.printHeader("clearAllComments");
 	tokens = Optimizer::clearAllComments(tokens);
-	PrintTokens(tokens);
+	logger.printTokens(tokens);
 
 	/*-----------------------------------------------*/
 
@@ -85,16 +86,12 @@ int main()
 
 	if (!errors.empty())
 	{
-		std::cout << "Errors Count: " << errors.size() << std::endl;
-		for (const auto& error : errors)
-		{
-			std::cout << error << std::endl;
-		}
+		logger.printErrors(errors);
 		return 1;
 	}
 	else
 	{
-		std::cout << "No errors found" << std::endl;
+		logger.printNoErrors();
 	}
 
 
@@ -105,26 +102,25 @@ int main()
 
 	if (!error.empty())
 	{
-		std::cout << "Error: " << error << std::endl;
+		logger.printError(error);
 		return 1;
 	}
 
 	CodeGenerator codeGenerator;
 	StateMachine* root = syntaxTree.root.get();
-	std::string code = codeGenerator.generate(*root);
-
-	std::cout << std::endl << "Generated code: " << std::endl << code << std::endl;
-
-	return 0;
-}
-
-void PrintTokens(const std::vector<Token> &tokens)
-{
-	std::cout << "Tokens Count: " << tokens.size() << std::endl;
-	for (const auto& token : tokens)
+	std::string code;
+	try
 	{
-		std::cout << token.toString() << ", ";
+		code = codeGenerator.generate(*root);
 	}
-	std::cout << std::endl;
+	catch (const std::exception& e)
+	{
+		logger.printError(e.what());
+		return 1;
+	}
+
+	logger.printCode(code);
+	logger.printDone();
+	return 0;
 }
 
