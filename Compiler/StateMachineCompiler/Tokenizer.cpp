@@ -91,7 +91,7 @@ std::vector<Token> Tokenizer::parse(std::string input)
 			continue;
 		}
 
-		if (c0 == 'o' && c1 == 'n' && isBlank(c2))
+		if ((c0 == 'o' || c0 == 'O') && (c1 == 'n' || c1 == 'N') && isBlank(c2))
 		{
 			tokens.emplace_back(TokenType::ON, "", line, position);
 			position += 2;
@@ -100,7 +100,7 @@ std::vector<Token> Tokenizer::parse(std::string input)
 		}
 
 
-		if (c0 == 'd' && c1 == 'e' && c2 == 'f' && c3 == 'a' && c4 == 'u' && c5 == 'l' && c6 == 't' && isBlank(c7))
+		if ((c0 == 'd' || c0 == 'D') && c1 == 'e' && c2 == 'f' && c3 == 'a' && c4 == 'u' && c5 == 'l' && c6 == 't' && isBlank(c7))
 		{
 			tokens.emplace_back(TokenType::DEFAULT, "", line, position);
 			position += 7;
