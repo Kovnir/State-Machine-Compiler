@@ -14,5 +14,6 @@ private:
         const std::vector<std::string>& source,
         const std::vector<std::string>& triggersNames,
         const std::vector<std::string>& triggersDistinations);
+    static void checkForDuplicates(const std::vector<std::string>& stateNames);
 };
 

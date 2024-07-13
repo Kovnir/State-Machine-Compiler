@@ -69,12 +69,7 @@ std::string CodeGenerator::generate(const StateMachine& stateMachine)
 		}
 
 		//check for duplicate state names
-		std::sort(stateNames.begin(), stateNames.end());
-		auto it = std::unique(stateNames.begin(), stateNames.end());
-		if (it != stateNames.end())
-		{
-			throw std::runtime_error("State machine has duplicate state names");
-		}
+		checkForDuplicates(stateNames);
 	}
 
 	std::vector<std::string> source;
@@ -120,6 +115,17 @@ std::string CodeGenerator::generate(const StateMachine& stateMachine)
 	}
 
     return generateCSharpCode(stateMachineName, defaultStateName, stateNames, source, triggersNames, triggersDistinations);
+}
+
+
+void CodeGenerator::checkForDuplicates(const std::vector<std::string>& stateNames) {
+    std::unordered_set<std::string> uniqueStates;
+
+    for (const auto& state : stateNames) {
+        if (!uniqueStates.insert(state).second) {
+            throw std::runtime_error("State machine has duplicate state names");
+        }
+    }
 }
 
 
@@ -291,8 +297,8 @@ using System.Threading.Tasks;
     {
         CheckStatus(true);
 
-        await Transit(null, )" << defaultStateName << R"();
-        return )" << defaultStateName << R"(;
+        await Transit(null, )" << defaultStateName <<R"(State);
+        return )" << defaultStateName << R"(State;
     })";
     code << "\n\n";
 
