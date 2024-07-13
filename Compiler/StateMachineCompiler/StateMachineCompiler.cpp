@@ -8,10 +8,10 @@
 #include "Optimizer.h"
 #include "SyntaxTree.h"
 #include "ErrorChecker.h"
-#include "SyntaxTreeValidator.h"
 #include "Logger.h"
 #include <fstream>
 #include <sstream>
+#include "CodeGenerator.h"
 
 bool parseArguments(int argc, char* argv[], bool& debug, std::string& filePath) 
 {

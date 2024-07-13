@@ -1,4 +1,4 @@
-﻿#include "SyntaxTreeValidator.h"
+﻿#include "CodeGenerator.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -117,12 +117,13 @@ std::string CodeGenerator::generate(const StateMachine& stateMachine)
 		}
 	}
 
-    return generateCSharpCode(stateMachineName, source, triggersNames, triggersDistinations);
+    return generateCSharpCode(stateMachineName, stateNames, source, triggersNames, triggersDistinations);
 }
 
 
 std::string CodeGenerator::generateCSharpCode(
     const std::string& stateMachineName,
+    const std::vector<std::string>& allStates,
     const std::vector<std::string>& source,
     const std::vector<std::string>& triggersNames,
     const std::vector<std::string>& triggersDistinations)
@@ -136,10 +137,6 @@ using System.Threading.Tasks;
 )";
 	code << "\n";
 
-
-    // Get uniques state
-    std::unordered_set<std::string> distinctStates(source.begin(), source.end());
-    distinctStates.insert(triggersDistinations.begin(), triggersDistinations.end());
 
 	// the beginning of the class and the enumeration of states
     code << "public sealed class " << stateMachineName << "\n{\n";
@@ -186,6 +183,7 @@ using System.Threading.Tasks;
         public Task OnEnter() => onEnter?.Invoke() ?? Task.CompletedTask;
         public Task OnExit() => onExit?.Invoke() ?? Task.CompletedTask;
     })";
+    code << "\n\n";
 
     /*
     public interface IRunningState
@@ -196,7 +194,7 @@ using System.Threading.Tasks;
     }
 */
 	// Generate state interfaces
-    for (const auto& state : distinctStates) {
+    for (const auto& state : allStates) {
         code << "    public interface I" << state << "\n    {\n";
         for (size_t i = 0; i < source.size(); ++i) {
             if (source[i] == state) {
@@ -221,7 +219,7 @@ using System.Threading.Tasks;
     }
 */
 	// Generate state classes
-    for (const auto& state : distinctStates) {
+    for (const auto& state : allStates) {
         code << "    public sealed class " << state << " : BaseState, I" << state << "\n    {\n";
         code << "        public " << state << "(Func<Task> onEnter = null, Func<Task> onExit = null) : base(onEnter, onExit)\n        {\n";
         code << "        }\n\n";
@@ -247,28 +245,28 @@ using System.Threading.Tasks;
 
 )";
 
-    for (const auto& state : distinctStates) {
+    for (const auto& state : allStates) {
         code << "    private " << state << " " << state << "State;\n";
     }
     code << "    public SMStatus Status;\n\n";
 
 
     code << "    public " << stateMachineName << "(";
-    for (const auto& state : distinctStates) {
+    for (const auto& state : allStates) {
         code << state << " " << state << "State, ";
     }
     code.seekp(-2, std::ios_base::end); // Remove the trailing comma and space
     code << ")\n    {\n";
     code << "        Status = SMStatus.Idle;\n";
     code << "        try\n        {\n";
-    for (const auto& state : distinctStates) {
+    for (const auto& state : allStates) {
         code << "            this." << state << "State = " << state << "State ?? throw new ArgumentNullException(nameof(" << state << "State));\n";
     }
     code << "        }\n        catch (Exception)\n        {\n";
     code << "            Status = SMStatus.Failed;\n";
     code << "            throw;\n";
     code << "        }\n\n";
-    for (const auto& state : distinctStates) {
+    for (const auto& state : allStates) {
         code << "        " << state << "State.Initialize(this);\n";
     }
     code << "    }\n\n";
