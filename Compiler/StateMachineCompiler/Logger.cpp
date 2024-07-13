@@ -1,5 +1,15 @@
 #include "Logger.h"
 
+void Logger::printLaunchParams(bool debug, const std::string& filePath) const
+{
+	if (!debugMode)
+	{
+		return;
+	}
+	std::cout << "Debug mode: " << (debug ? "ON" : "OFF") << std::endl;
+	std::cout << "File path: " << filePath << std::endl;
+}
+
 void Logger::printTokens(const std::vector<Token>& tokens) const
 {
 	if (!debugMode)
@@ -57,5 +67,5 @@ void Logger::printCode(const std::string& code) const
 
 void Logger::printDone() const
 {
-	std::cout << "Done" << std::endl;
+	std::cout << "Done!" << std::endl;
 }

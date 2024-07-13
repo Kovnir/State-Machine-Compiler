@@ -10,10 +10,32 @@
 #include "ErrorChecker.h"
 #include "SyntaxTreeValidator.h"
 #include "Logger.h"
+#include <fstream>
+
+bool parseArguments(int argc, char* argv[], bool& debug, std::string& filePath) 
+{
+	debug = false;
+	filePath.clear();
+
+	if (argc < 2 || argc > 3) {
+		return false;
+	}
+
+	for (int i = 1; i < argc; ++i) {
+		std::string arg = argv[i];
+		if (arg == "--debug") {
+			debug = true;
+		}
+		else {
+			filePath = arg;
+		}
+	}
+
+	return true;
+}
 
 
-
-int main()
+int main(int argc, char* argv[])
 {
 	//std::string input = "\
  // /*\n\
@@ -39,7 +61,24 @@ int main()
     *     on Pause -> PausedState    
     */
 )";
-	Logger logger = Logger(true);
+	bool debug = false;
+	std::string filePath;
+
+	if (!parseArguments(argc, argv, debug, filePath)) {
+		std::cerr << "Usage: " << argv[0] << " [--debug] <path_to_file>" << std::endl;
+		return 1;
+	}
+
+	Logger logger = Logger(debug);
+
+	logger.printLaunchParams(debug, filePath);
+
+	std::ifstream file(filePath);
+	if (!file) {
+		logger.printError("File does not exist");
+		return false;
+	}
+
 
 	std::vector<Token> tokens = Tokenizer::parse(input);
 
