@@ -56,7 +56,7 @@ std::vector<Token> Tokenizer::parse(std::string input)
 			continue;
 		}
 
-		if (c0 == '\n' && isBlank(c1))
+		if (c0 == '\n')
 		{
 			tokens.emplace_back(TokenType::NEW_LINE, "", line, position);
 			line++;

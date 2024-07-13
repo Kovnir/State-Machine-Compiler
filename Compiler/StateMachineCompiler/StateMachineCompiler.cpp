@@ -11,6 +11,7 @@
 #include "SyntaxTreeValidator.h"
 #include "Logger.h"
 #include <fstream>
+#include <sstream>
 
 bool parseArguments(int argc, char* argv[], bool& debug, std::string& filePath) 
 {
@@ -34,6 +35,34 @@ bool parseArguments(int argc, char* argv[], bool& debug, std::string& filePath)
 	return true;
 }
 
+bool removeBOM(std::ifstream& file) {
+	char bom[3] = { 0 };
+	file.read(bom, 3);
+
+	// Check if the file starts with the UTF-8 BOM
+	if (bom[0] == '\xEF' && bom[1] == '\xBB' && bom[2] == '\xBF') {
+		// BOM found, no need to put back the read characters
+		return true;
+	}
+	else {
+		// No BOM found, put back the read characters
+		file.seekg(0);
+		return false;
+	}
+}
+
+std::string readFileWithBOMCheck(const std::string& filePath) {
+	std::ifstream file(filePath, std::ios::binary);
+	if (!file) {
+		throw std::runtime_error("Failed to open the file for reading");
+	}
+
+	removeBOM(file);
+
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	return buffer.str();
+}
 
 int main(int argc, char* argv[])
 {
@@ -53,14 +82,7 @@ int main(int argc, char* argv[])
  //   *     on Replay -> RunningState\n\
  //   */\n\                  ";
 
-	std::string input = R"(  /*
-    * TestStateMachine
-    *   IdleState default
-    *     on Play -> RunningState    
-    *   RunningState // some comment
-    *     on Pause -> PausedState    
-    */
-)";
+
 	bool debug = false;
 	std::string filePath;
 
@@ -69,17 +91,29 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	Logger logger = Logger(debug);
+	auto logger = Logger(debug);
 
 	logger.printLaunchParams(debug, filePath);
 
-	std::ifstream file(filePath);
-	if (!file) {
-		logger.printError("File does not exist");
-		return false;
+	std::string input;
+	try {
+		input = readFileWithBOMCheck(argv[1]);
+	}
+	catch (const std::exception& e) {
+		logger.printError(e.what());
+		return 1;
 	}
 
-
+	
+	//
+//	std::string input = R"(  /*
+//    * TestStateMachine
+//    *   IdleState default
+//    *     on Play -> RunningState    
+//    *   RunningState // some comment
+//    *     on Pause -> PausedState    
+//    */
+//)";
 	std::vector<Token> tokens = Tokenizer::parse(input);
 
 	logger.printTokens(tokens);
@@ -158,7 +192,18 @@ int main(int argc, char* argv[])
 	}
 
 	logger.printCode(code);
+
+	std::ofstream outputFile(filePath, std::ios::trunc);
+	if (!outputFile) {
+		logger.printError("Failed to open the file for writing");
+		return 1;
+	}
+
+	outputFile << input << std::endl;
+	outputFile << code << std::endl;
+
 	logger.printDone();
+
 	return 0;
 }
 
