@@ -64,6 +64,19 @@ std::string readFileWithBOMCheck(const std::string& filePath) {
 	return buffer.str();
 }
 
+std::string cleanString(const std::string& str) {
+	//to fix double new lines
+	std::string result;
+	result.reserve(str.size());
+	for (char c : str) {
+		if (c != '\r') {
+			result += c;
+		}
+	}
+	return result;
+}
+
+
 int main(int argc, char* argv[])
 {
 	//std::string input = "\
@@ -98,6 +111,7 @@ int main(int argc, char* argv[])
 	std::string input;
 	try {
 		input = readFileWithBOMCheck(argv[1]);
+		logger.printInput(input);
 	}
 	catch (const std::exception& e) {
 		logger.printError(e.what());
@@ -128,18 +142,6 @@ int main(int argc, char* argv[])
 	tokens = Optimizer::clearEverythingBeforeStar(tokens);
 	logger.printTokens(tokens);
 
-	logger.printHeader("clearNewLinesOnStart");
-	tokens = Optimizer::clearNewLinesOnStart(tokens);
-	logger.printTokens(tokens);
-
-	logger.printHeader("clearNewLinesOnEnd");
-	tokens = Optimizer::clearNewLinesOnEnd(tokens);
-	logger.printTokens(tokens);
-
-	logger.printHeader("ClearNewLinesOnEnd");
-	tokens = Optimizer::clearNewLinesOnEnd(tokens);
-	logger.printTokens(tokens);
-
 	logger.printHeader("clearDoubleNewLines");
 	tokens = Optimizer::clearDoubleNewLines(tokens);
 	logger.printTokens(tokens);
@@ -151,6 +153,15 @@ int main(int argc, char* argv[])
 	logger.printHeader("clearAllComments");
 	tokens = Optimizer::clearAllComments(tokens);
 	logger.printTokens(tokens);
+
+	logger.printHeader("clearNewLinesOnStart");
+	tokens = Optimizer::clearNewLinesOnStart(tokens);
+	logger.printTokens(tokens);
+
+	logger.printHeader("ClearNewLinesOnEnd");
+	tokens = Optimizer::clearNewLinesOnEnd(tokens);
+	logger.printTokens(tokens);
+
 
 	/*-----------------------------------------------*/
 
@@ -199,7 +210,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	outputFile << input << std::endl;
+	outputFile << cleanString(input) << std::endl;
 	outputFile << code << std::endl;
 
 	logger.printDone();

@@ -128,6 +128,14 @@ std::string CodeGenerator::generateCSharpCode(
     const std::vector<std::string>& triggersDistinations)
 {
     std::ostringstream code;
+    // add imports
+
+    code << R"(
+using System;
+using System.Threading.Tasks;
+)";
+	code << "\n";
+
 
     // Get uniques state
     std::unordered_set<std::string> distinctStates(source.begin(), source.end());

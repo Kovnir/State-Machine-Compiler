@@ -10,6 +10,15 @@ void Logger::printLaunchParams(bool debug, const std::string& filePath) const
 	std::cout << "File path: " << filePath << std::endl;
 }
 
+void Logger::printInput(const std::string& input) const
+{
+	if (!debugMode)
+	{
+		return;
+	}
+	std::cout << "Input: " << std::endl << input << std::endl;
+}
+
 void Logger::printTokens(const std::vector<Token>& tokens) const
 {
 	if (!debugMode)
