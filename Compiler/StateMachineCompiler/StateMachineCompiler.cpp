@@ -9,9 +9,8 @@
 #include "SyntaxTree.h"
 #include "ErrorChecker.h"
 #include "Logger.h"
-#include <fstream>
-#include <sstream>
 #include "CodeGenerator.h"
+#include "FileProcessor.cpp"
 
 bool parseArguments(int argc, char* argv[], bool& debug, std::string& filePath) 
 {
@@ -35,67 +34,9 @@ bool parseArguments(int argc, char* argv[], bool& debug, std::string& filePath)
 	return true;
 }
 
-bool removeBOM(std::ifstream& file) {
-	char bom[3] = { 0 };
-	file.read(bom, 3);
-
-	// Check if the file starts with the UTF-8 BOM
-	if (bom[0] == '\xEF' && bom[1] == '\xBB' && bom[2] == '\xBF') {
-		// BOM found, no need to put back the read characters
-		return true;
-	}
-	else {
-		// No BOM found, put back the read characters
-		file.seekg(0);
-		return false;
-	}
-}
-
-std::string readFileWithBOMCheck(const std::string& filePath) {
-	std::ifstream file(filePath, std::ios::binary);
-	if (!file) {
-		throw std::runtime_error("Failed to open the file for reading");
-	}
-
-	removeBOM(file);
-
-	std::stringstream buffer;
-	buffer << file.rdbuf();
-	return buffer.str();
-}
-
-std::string cleanString(const std::string& str) {
-	//to fix double new lines
-	std::string result;
-	result.reserve(str.size());
-	for (char c : str) {
-		if (c != '\r') {
-			result += c;
-		}
-	}
-	return result;
-}
-
 
 int main(int argc, char* argv[])
 {
-	//std::string input = "\
- // /*\n\
- //   * TestStateMachine\n\
- //   *   IdleState default\n\
- //   *     on Play -> RunningState\n\
- //   *   RunningState // some comment\n\
- //   *     on Pause -> PausedState    \n\
- //   *     on Finish -> FinishedState \n\
- //   *     on Stop ->    IdleState\n\
- //   *   PausedState\n\
- //   *     on Resume -> RunningState\n\
- //   *     on Stop -> IdleState\n\
- //   *   FinishedState\n\
- //   *     on Replay -> RunningState\n\
- //   */\n\                  ";
-
-
 	bool debug = false;
 	std::string filePath;
 
@@ -105,29 +46,17 @@ int main(int argc, char* argv[])
 	}
 
 	auto logger = Logger(debug);
+	auto fileProcessor = FileProcessor(false, logger);
 
 	logger.printLaunchParams(debug, filePath);
 
-	std::string input;
-	try {
-		input = readFileWithBOMCheck(argv[1]);
-		logger.printInput(input);
-	}
-	catch (const std::exception& e) {
-		logger.printError(e.what());
+	std::string input = fileProcessor.readFile(filePath);
+
+	if (input.empty()) {
+		logger.printError("Failed to read the file");
 		return 1;
 	}
-
 	
-	//
-//	std::string input = R"(  /*
-//    * TestStateMachine
-//    *   IdleState default
-//    *     on Play -> RunningState    
-//    *   RunningState // some comment
-//    *     on Pause -> PausedState    
-//    */
-//)";
 	std::vector<Token> tokens = Tokenizer::parse(input);
 
 	logger.printTokens(tokens);
@@ -204,14 +133,11 @@ int main(int argc, char* argv[])
 
 	logger.printCode(code);
 
-	std::ofstream outputFile(filePath, std::ios::trunc);
-	if (!outputFile) {
-		logger.printError("Failed to open the file for writing");
+	if (!fileProcessor.writeToFile(filePath, input, code))
+	{
+		logger.printError("Failed to write to the file");
 		return 1;
 	}
-
-	outputFile << cleanString(input) << std::endl;
-	outputFile << code << std::endl;
 
 	logger.printDone();
 

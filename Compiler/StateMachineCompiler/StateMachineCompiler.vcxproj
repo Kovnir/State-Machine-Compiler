@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ErrorChecker.cpp" />
+    <ClCompile Include="FileProcessor.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Optimizer.cpp" />
     <ClCompile Include="Optimizer.h" />

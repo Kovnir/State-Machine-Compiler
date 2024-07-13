@@ -29,6 +29,7 @@ std::string CodeGenerator::generate(const StateMachine& stateMachine)
 		throw std::runtime_error("State machine has only one state");
 	}
 
+    std::string defaultStateName;
 	std::vector<std::string> stateNames;
 
 	if (stateMachine.states.size() > 1)
@@ -39,6 +40,7 @@ std::string CodeGenerator::generate(const StateMachine& stateMachine)
 		{
 			if (state->isDefault)
 			{
+				defaultStateName = state->data.value;
 				defaultStatesCount++;
 			}
 			std::string stateName = state->data.value;
@@ -117,12 +119,13 @@ std::string CodeGenerator::generate(const StateMachine& stateMachine)
 		}
 	}
 
-    return generateCSharpCode(stateMachineName, stateNames, source, triggersNames, triggersDistinations);
+    return generateCSharpCode(stateMachineName, defaultStateName, stateNames, source, triggersNames, triggersDistinations);
 }
 
 
 std::string CodeGenerator::generateCSharpCode(
     const std::string& stateMachineName,
+    const std::string& defaultStateName,
     const std::vector<std::string>& allStates,
     const std::vector<std::string>& source,
     const std::vector<std::string>& triggersNames,
@@ -248,7 +251,7 @@ using System.Threading.Tasks;
     for (const auto& state : allStates) {
         code << "    private " << state << " " << state << "State;\n";
     }
-    code << "    public SMStatus Status;\n\n";
+    code << "    public SMStatus Status { get; private set;}\n\n";
 
 
     code << "    public " << stateMachineName << "(";
@@ -271,7 +274,31 @@ using System.Threading.Tasks;
     }
     code << "    }\n\n";
 
-    // Методы переходов
+
+
+    // State Machine Start
+    /*
+    public async Task<IIdleState> Run()
+    {
+        CheckStatus(true);
+
+        await Transit(null, idleState);
+        return idleState;
+    }
+    */
+    code << R"(
+    public async Task<)" << defaultStateName << R"(> Run()
+    {
+        CheckStatus(true);
+
+        await Transit(null, )" << defaultStateName << R"();
+        return )" << defaultStateName << R"(;
+    })";
+    code << "\n\n";
+
+
+
+	// Transition methods
     for (size_t i = 0; i < source.size(); ++i) {
         code << "    private async Task<I" << triggersDistinations[i] << "> On" << triggersNames[i] << "From" << source[i] << "()\n    {\n";
         code << "        CheckStatus();\n";

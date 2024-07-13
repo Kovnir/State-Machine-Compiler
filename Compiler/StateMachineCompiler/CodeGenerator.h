@@ -9,6 +9,7 @@ public:
 private:
     static std::string generateCSharpCode(
         const std::string& stateMachineName,
+        const std::string& defaultStateName,
         const std::vector<std::string>& allStates,
         const std::vector<std::string>& source,
         const std::vector<std::string>& triggersNames,
