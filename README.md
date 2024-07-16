@@ -334,7 +334,7 @@ Enable debugging mode with the `--debug` flag to get detailed logs about the sta
 
 ## Flow Diagram
 
-![Flow Diagram](Docs/diagram.png)
+![Flow Diagram](Docs/FlowDiagram.jpg)
 
 ## Future Updates
 - **Add Comment Transfer**: Implement functionality to transfer comments from the state machine description to the generated code, preserving the context.
