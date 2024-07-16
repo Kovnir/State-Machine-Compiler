@@ -1,5 +1,9 @@
 # State-Machine-Compiler
 
+![Flow Diagram](Docs/generation.gif)
+
+![Flow Diagram](Docs/usage.gif)
+
 ## Overview
 
 **State-Machine-Compiler** is a C++ project designed to generate type-safe asynchronous state machine code from a high-level abstract language description. This tool allows users to define state machines in a simple, human-readable format and then compiles that description into robust C# code.
