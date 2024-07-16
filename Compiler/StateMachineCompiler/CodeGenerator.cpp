@@ -293,7 +293,7 @@ using System.Threading.Tasks;
     }
     */
     code << R"(
-    public async Task<)" << defaultStateName << R"(> Run()
+    public async Task<I)" << defaultStateName << R"(> Run()
     {
         CheckStatus(true);
 
