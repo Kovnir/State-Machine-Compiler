@@ -328,7 +328,7 @@ Enable debugging mode with the `--debug` flag to get detailed logs about the sta
 
 3. **Syntax Checking**: The token stream is checked for basic syntax errors. Some compilation errors could be generated here.
 
-4. **Parse Tree Construction**: A syntax tree is built from the token stream. If errors are found, they are thrown.
+4. **Syntax Tree Building**: A syntax tree is built from the token stream. If errors are found, they are thrown.
 
 5. **Code Generation**: The validated syntax tree is used to generate C# code for the state machine.
 
