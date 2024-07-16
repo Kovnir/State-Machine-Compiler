@@ -38,7 +38,7 @@ smc --debug path/to/state_machine.txt
 ### Example
 Here’s how you can define the state machine, compile it, and then integrate the generated C# code.
 
-1. **Define the State Machine** in a text file (e.g., `state_machine.txt`):
+1. **Define the State Machine** in a text file (e.g., `MonsterStateMachine.cs`):
     ```plaintext
     /*
      * MonsterStateMachine
@@ -55,7 +55,7 @@ Here’s how you can define the state machine, compile it, and then integrate th
 
 2. **Compile the State Machine** using the `smc` executable:
     ```sh
-    smc path/to/state_machine.txt
+    smc path/to/MonsterStateMachine.cs
     ```
 
 3. **Generated C# Code**:
