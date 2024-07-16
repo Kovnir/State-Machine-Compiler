@@ -339,6 +339,7 @@ Enable debugging mode with the `--debug` flag to get detailed logs about the sta
 ## Future Updates
 - **Add Comment Transfer**: Implement functionality to transfer comments from the state machine description to the generated code, preserving the context.
 - **Enhance UX for Compilation Error Output**: Improve the user experience by providing more detailed and user-friendly error messages during the compilation process, including information for easier debugging.
+- **Support for Nested State Machines**: Introduce the ability to create nested state machines, allowing more complex state transitions and hierarchical state management within the generated code.
 - **Improve Test Coverage**: Increase the coverage of unit and integration tests to ensure the reliability and robustness of the compiler, catching more edge cases and potential issues.
 
 ## Contribution
