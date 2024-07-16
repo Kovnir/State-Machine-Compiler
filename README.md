@@ -72,21 +72,7 @@ Here’s how you can define the state machine, compile it, and then integrate th
 
         public abstract class BaseState
         {
-            private readonly Func<Task> onEnter;
-            private readonly Func<Task> onExit;
-            protected MonsterStateMachine monsterStateMachine;
-
-            protected BaseState(Func<Task> onEnter = null, Func<Task> onExit = null)
-            {
-                this.onEnter = onEnter;
-                this.onExit = onExit;
-            }
-
-            public void Initialize(MonsterStateMachine monsterStateMachine)
-                => this.monsterStateMachine = monsterStateMachine;
-
-            public Task OnEnter() => onEnter?.Invoke() ?? Task.CompletedTask;
-            public Task OnExit() => onExit?.Invoke() ?? Task.CompletedTask;
+            ...
         }
 
         public interface IIdle
@@ -108,31 +94,17 @@ Here’s how you can define the state machine, compile it, and then integrate th
 
         public sealed class Idle : BaseState, IIdle
         {
-            public Idle(Func<Task> onEnter = null, Func<Task> onExit = null) : base(onEnter, onExit)
-            {
-            }
-
-            public Task<IChase> PlayerInRadius() => monsterStateMachine.OnPlayerInRadiusFromIdle();
+            ...
         }
 
         public class Chase : BaseState, IChase
         {
-            public Chase(Func<Task> onEnter = null, Func<Task> onExit = null) : base(onEnter, onExit)
-            {
-            }
-
-            public Task<IIdle> PlayerOutOfRange() => monsterStateMachine.OnPlayerOutOfRangeFromChase();
-            public Task<IAttack> PlayerInAttackRange() => monsterStateMachine.OnPlayerInAttackRangeFromChase();
+            ...
         }
 
         public class Attack : BaseState, IAttack
         {
-            public Attack(Func<Task> onEnter = null, Func<Task> onExit = null) : base(onEnter, onExit)
-            {
-            }
-
-            public Task<IChase> AttackComplete() => monsterStateMachine.OnAttackCompleteFromAttack();
-            public Task<IIdle> PlayerDead() => monsterStateMachine.OnPlayerDeadFromAttack();
+            ...
         }
 
         private BaseState currentState;
@@ -140,115 +112,18 @@ Here’s how you can define the state machine, compile it, and then integrate th
         private Idle idleState;
         private Chase chaseState;
         private Attack attackState;
-        public SMStatus Status;
+        public SMStatus Status {get; private set}
 
         public MonsterStateMachine(Idle idleState, Chase chaseState, Attack attackState)
         {
-            Status = SMStatus.Idle;
-
-            try
-            {
-                this.idleState = idleState ?? throw new ArgumentNullException(nameof(idleState));
-                this.chaseState = chaseState ?? throw new ArgumentNullException(nameof(chaseState));
-                this.attackState = attackState ?? throw new ArgumentNullException(nameof(attackState));
-            }
-            catch (Exception)
-            {
-                Status = SMStatus.Failed;
-                throw;
-            }
-
-            idleState.Initialize(this);
-            chaseState.Initialize(this);
-            attackState.Initialize(this);
+            ...
         }
 
         public async Task<IIdle> Run()
         {
-            CheckStatus(true);
-            await Transit(null, idleState);
-            return idleState;
+            ...
         }
-
-        private async Task<IChase> OnPlayerInRadiusFromIdle()
-        {
-            CheckStatus();
-            await Transit(idleState, chaseState);
-            return chaseState;
-        }
-
-        private async Task<IIdle> OnPlayerOutOfRangeFromChase()
-        {
-            CheckStatus();
-            await Transit(chaseState, idleState);
-            return idleState;
-        }
-
-        private async Task<IAttack> OnPlayerInAttackRangeFromChase()
-        {
-            CheckStatus();
-            await Transit(chaseState, attackState);
-            return attackState;
-        }
-
-        private async Task<IChase> OnAttackCompleteFromAttack()
-        {
-            CheckStatus();
-            await Transit(attackState, chaseState);
-            return chaseState;
-        }
-
-        private async Task<IIdle> OnPlayerDeadFromAttack()
-        {
-            CheckStatus();
-            await Transit(attackState, idleState);
-            return idleState;
-        }
-
-        private void CheckStatus(bool firstRun = false)
-        {
-            switch (Status)
-            {
-                case SMStatus.Failed:
-                    throw new InvalidOperationException("StateMachine failed");
-                case SMStatus.Running:
-                    if (firstRun)
-                    {
-                        Status = SMStatus.Failed;
-                        throw new InvalidOperationException("StateMachine is already running");
-                    }
-                    break;
-                case SMStatus.Transitioning:
-                    Status = SMStatus.Failed;
-                    throw new InvalidOperationException("StateMachine is transitioning");
-            }
-        }
-
-        private async Task Transit(BaseState from, BaseState to)
-        {
-            try
-            {
-                Status = SMStatus.Transitioning;
-                if (from != null && from != currentState)
-                {
-                    throw new InvalidOperationException("Invalid state transition. Current state is not the expected state.");
-                }
-
-                if (from != null)
-                {
-                    await from.OnExit();
-                }
-
-                currentState = to;
-                await to.OnEnter();
-                Status = SMStatus.Running;
-            }
-            catch (Exception)
-            {
-                Status = SMStatus.Failed;
-                throw;
-            }
-        }
+        ...
     }
     ```
 
