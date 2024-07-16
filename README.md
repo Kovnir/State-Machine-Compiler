@@ -306,6 +306,7 @@ Here’s how you can define the state machine, compile it, and then integrate th
 Enable debugging mode with the `--debug` flag to get detailed logs about the state machine compilation process.
 
 ## How It Works
+![Flow Diagram](Docs/FlowDiagram.jpg)
 
 1. **Lexical Analysis**: The input string is tokenized into a sequence of tokens. Each token has a type and position (for clear compilation errors) and could have optional data.
     ```cpp
@@ -331,10 +332,6 @@ Enable debugging mode with the `--debug` flag to get detailed logs about the sta
 4. **Syntax Tree Building**: A syntax tree is built from the token stream. If errors are found, they are thrown.
 
 5. **Code Generation**: The validated syntax tree is used to generate C# code for the state machine.
-
-## Flow Diagram
-
-![Flow Diagram](Docs/FlowDiagram.jpg)
 
 ## Future Updates
 - **Add Comment Transfer**: Implement functionality to transfer comments from the state machine description to the generated code, preserving the context.
