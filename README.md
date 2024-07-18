@@ -35,7 +35,6 @@ Compile the project and run the `smc` executable with the path to the state mach
 ```sh
 smc --debug path/to/state_machine.txt
 ```
-![Flow Diagram](Docs/generation.gif)
 
 ### Example
 Here’s how you can define the state machine, compile it, and then integrate the generated C# code.
@@ -59,6 +58,8 @@ Here’s how you can define the state machine, compile it, and then integrate th
     ```sh
     smc path/to/MonsterStateMachine.cs
     ```
+
+![Flow Diagram](Docs/generation.gif)
 
 3. **Generated C# Code**:
     ```csharp
