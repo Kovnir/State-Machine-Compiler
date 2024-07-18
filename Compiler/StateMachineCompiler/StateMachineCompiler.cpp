@@ -12,7 +12,9 @@
 #include "CodeGenerator.h"
 #include "FileProcessor.cpp"
 
-bool parseArguments(int argc, char* argv[], bool& debug, std::string& filePath) 
+using namespace std;
+
+bool parseArguments(int argc, char* argv[], bool& debug, string& filePath) 
 {
 	debug = false;
 	filePath.clear();
@@ -22,7 +24,7 @@ bool parseArguments(int argc, char* argv[], bool& debug, std::string& filePath)
 	}
 
 	for (int i = 1; i < argc; ++i) {
-		std::string arg = argv[i];
+		string arg = argv[i];
 		if (arg == "--debug") {
 			debug = true;
 		}
@@ -38,10 +40,10 @@ bool parseArguments(int argc, char* argv[], bool& debug, std::string& filePath)
 int main(int argc, char* argv[])
 {
 	bool debug = false;
-	std::string filePath;
+	string filePath;
 
 	if (!parseArguments(argc, argv, debug, filePath)) {
-		std::cerr << "Usage: " << argv[0] << " [--debug] <path_to_file>" << std::endl;
+		cerr << "Usage: " << argv[0] << " [--debug] <path_to_file>" << endl;
 		return 1;
 	}
 
@@ -50,14 +52,14 @@ int main(int argc, char* argv[])
 
 	logger.printLaunchParams(debug, filePath);
 
-	std::string input = fileProcessor.readFile(filePath);
+	string input = fileProcessor.readFile(filePath);
 
 	if (input.empty()) {
 		logger.printError("Failed to read the file");
 		return 1;
 	}
 	
-	std::vector<Token> tokens = Tokenizer::parse(input);
+	vector<Token> tokens = Tokenizer::parse(input);
 
 	logger.printTokens(tokens);
 
@@ -95,7 +97,7 @@ int main(int argc, char* argv[])
 	/*-----------------------------------------------*/
 
 
-	std::vector<std::string> errors = ErrorChecker::checkErrors(tokens);
+	vector<string> errors = ErrorChecker::checkErrors(tokens);
 
 	if (!errors.empty())
 	{
@@ -111,7 +113,7 @@ int main(int argc, char* argv[])
 	/*-----------------------------------------------*/
 
 	SyntaxTree syntaxTree;
-	std::string error = syntaxTree.parseTokens(tokens);
+	string error = syntaxTree.parseTokens(tokens);
 
 	if (!error.empty())
 	{
@@ -120,12 +122,12 @@ int main(int argc, char* argv[])
 	}
 
 	StateMachine* root = syntaxTree.root.get();
-	std::string code;
+	string code;
 	try
 	{
 		code = CodeGenerator::generate(*root);
 	}
-	catch (const std::exception& e)
+	catch (const exception& e)
 	{
 		logger.printError(e.what());
 		return 1;

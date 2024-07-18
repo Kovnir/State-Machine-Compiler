@@ -5,11 +5,11 @@
 
 class TokenSequence
 {
-	const std::vector<Token>& tokens;
+	const vector<Token>& tokens;
 	int index = 0;
 
 public:
-	explicit TokenSequence(const std::vector<Token>& tokens) : tokens(tokens) {}
+	explicit TokenSequence(const vector<Token>& tokens) : tokens(tokens) {}
 
 	const void moveNext()
 	{

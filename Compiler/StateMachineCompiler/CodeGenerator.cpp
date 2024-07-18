@@ -6,31 +6,33 @@
 #include <vector>
 #include <unordered_set>
 
-std::string CodeGenerator::generate(const StateMachine& stateMachine)
+using namespace std;
+
+string CodeGenerator::generate(const StateMachine& stateMachine)
 {
-	std::string stateMachineName = stateMachine.data.value;
+	string stateMachineName = stateMachine.data.value;
 	if (stateMachineName.empty())
 	{
-		throw std::runtime_error("State machine name is empty");
+		throw runtime_error("State machine name is empty");
 	}
 
-    if (stateMachineName.find(' ') != std::string::npos)
+    if (stateMachineName.find(' ') != string::npos)
     {
-		throw std::runtime_error("State machine name contains spaces");
+		throw runtime_error("State machine name contains spaces");
     }
 
 	if (stateMachine.states.size() == 0)
 	{
-		throw std::runtime_error("State machine has no states");
+		throw runtime_error("State machine has no states");
 	}
 
 	if (stateMachine.states.size() == 1)
 	{
-		throw std::runtime_error("State machine has only one state");
+		throw runtime_error("State machine has only one state");
 	}
 
-    std::string defaultStateName;
-	std::vector<std::string> stateNames;
+    string defaultStateName;
+	vector<string> stateNames;
 
 	if (stateMachine.states.size() > 1)
 	{
@@ -43,16 +45,16 @@ std::string CodeGenerator::generate(const StateMachine& stateMachine)
 				defaultStateName = state->data.value;
 				defaultStatesCount++;
 			}
-			std::string stateName = state->data.value;
+			string stateName = state->data.value;
 
 			if (stateName.empty())
 			{
-				throw std::runtime_error("State name is empty");
+				throw runtime_error("State name is empty");
 			}
             
-			if (stateName.find(' ') != std::string::npos)
+			if (stateName.find(' ') != string::npos)
 			{
-				throw std::runtime_error("State name contains spaces");
+				throw runtime_error("State name contains spaces");
 			}
 
 			stateNames.push_back(stateName);
@@ -60,52 +62,52 @@ std::string CodeGenerator::generate(const StateMachine& stateMachine)
 
 		if (defaultStatesCount == 0)
 		{
-			throw std::runtime_error("State machine has no default state");
+			throw runtime_error("State machine has no default state");
 		}
 
 		if (defaultStatesCount > 1)
 		{
-			throw std::runtime_error("State machine has more than one default state");
+			throw runtime_error("State machine has more than one default state");
 		}
 
 		//check for duplicate state names
 		checkForDuplicates(stateNames);
 	}
 
-	std::vector<std::string> source;
-	std::vector<std::string> triggersNames;
-	std::vector<std::string> triggersDistinations;
+	vector<string> source;
+	vector<string> triggersNames;
+	vector<string> triggersDistinations;
 
 	for (const auto& state : stateMachine.states)
 	{
 		//state name
-		std::string stateName = state->data.value;
+		string stateName = state->data.value;
 
 		//triggers
 		for (const auto& trigger : state->triggers)
 		{
 			//trigger condition
-			std::string triggerCondition = trigger->condition;
+			string triggerCondition = trigger->condition;
 			if (triggerCondition.empty())
 			{
-				throw std::runtime_error("Trigger condition is empty");
+				throw runtime_error("Trigger condition is empty");
 			}
 
-			if (triggerCondition.find(' ') != std::string::npos)
+			if (triggerCondition.find(' ') != string::npos)
 			{
-				throw std::runtime_error("Trigger condition contains spaces");
+				throw runtime_error("Trigger condition contains spaces");
 			}
 
 			//trigger destination
-			std::string triggerDestination = trigger->targetStateString;
+			string triggerDestination = trigger->targetStateString;
 			if (triggerDestination.empty())
 			{
-				throw std::runtime_error("Trigger destination is empty");
+				throw runtime_error("Trigger destination is empty");
 			}
 
-			if (triggerDestination.find(' ') != std::string::npos)
+			if (triggerDestination.find(' ') != string::npos)
 			{
-				throw std::runtime_error("Trigger destination contains spaces");
+				throw runtime_error("Trigger destination contains spaces");
 			}
 
 			source.push_back(stateName);
@@ -118,26 +120,26 @@ std::string CodeGenerator::generate(const StateMachine& stateMachine)
 }
 
 
-void CodeGenerator::checkForDuplicates(const std::vector<std::string>& stateNames) {
-    std::unordered_set<std::string> uniqueStates;
+void CodeGenerator::checkForDuplicates(const vector<string>& stateNames) {
+    unordered_set<string> uniqueStates;
 
     for (const auto& state : stateNames) {
         if (!uniqueStates.insert(state).second) {
-            throw std::runtime_error("State machine has duplicate state names");
+            throw runtime_error("State machine has duplicate state names");
         }
     }
 }
 
 
-std::string CodeGenerator::generateCSharpCode(
-    const std::string& stateMachineName,
-    const std::string& defaultStateName,
-    const std::vector<std::string>& allStates,
-    const std::vector<std::string>& source,
-    const std::vector<std::string>& triggersNames,
-    const std::vector<std::string>& triggersDistinations)
+string CodeGenerator::generateCSharpCode(
+    const string& stateMachineName,
+    const string& defaultStateName,
+    const vector<string>& allStates,
+    const vector<string>& source,
+    const vector<string>& triggersNames,
+    const vector<string>& triggersDistinations)
 {
-    std::ostringstream code;
+    ostringstream code;
     // add imports
 
     code << R"(
@@ -264,7 +266,7 @@ using System.Threading.Tasks;
     for (const auto& state : allStates) {
         code << state << " " << state << "State, ";
     }
-    code.seekp(-2, std::ios_base::end); // Remove the trailing comma and space
+    code.seekp(-2, ios_base::end); // Remove the trailing comma and space
     code << ")\n    {\n";
     code << "        Status = SMStatus.Idle;\n";
     code << "        try\n        {\n";

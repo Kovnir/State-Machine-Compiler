@@ -4,7 +4,10 @@
 #include <memory>
 #include <vector>
 
-//std::string input = R"(  /*
+using namespace std;
+
+
+//string input = R"(  /*
 //    * TestStateMachine
 //    *   IdleState default
 //    *     on Play -> RunningState    
@@ -25,7 +28,7 @@ struct Trigger;
 
 struct TreeNode {
 	Token data;
-	//	std::string comment;
+	//	string comment;
 
 	explicit TreeNode(const Token val) : data(val) {}
 	virtual NodeType getType() const = 0;
@@ -33,11 +36,11 @@ struct TreeNode {
 
 struct StateMachine : public TreeNode {
 	using TreeNode::TreeNode;
-	std::vector<std::unique_ptr<State>> states;
+	vector<unique_ptr<State>> states;
 	State* addState(const Token* val) {
-		auto child = std::make_unique<State>(*val);
+		auto child = make_unique<State>(*val);
 		State* childPtr = child.get();
-		states.push_back(std::move(child));
+		states.push_back(move(child));
 		return childPtr;
 	}
 	NodeType getType() const override { return NodeType::STATE_MACHINE; }
@@ -46,20 +49,20 @@ struct StateMachine : public TreeNode {
 struct Trigger : public TreeNode {
 	using TreeNode::TreeNode;
 	State* rootState = nullptr;
-	std::string condition;
-	std::string targetStateString;
+	string condition;
+	string targetStateString;
 	NodeType getType() const override { return NodeType::TRIGGER; }
 };
 
 struct State : public TreeNode {
 	using TreeNode::TreeNode;
 	bool isDefault = false;
-	std::vector<std::unique_ptr<Trigger>> triggers;
+	vector<unique_ptr<Trigger>> triggers;
 	Trigger* addTrigger(const Token& val) {
-		auto trigger = std::make_unique<Trigger>(val);
+		auto trigger = make_unique<Trigger>(val);
 		trigger->rootState = this;
 		Trigger* childPtr = trigger.get();
-		triggers.push_back(std::move(trigger));
+		triggers.push_back(move(trigger));
 		return childPtr;
 	}
 	NodeType getType() const override { return NodeType::STATE; }

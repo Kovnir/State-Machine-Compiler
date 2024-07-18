@@ -3,6 +3,8 @@
 #include "Token.cpp"
 #include "TokenSequence.cpp"
 
+using namespace std;
+
 // from this code
 //   * TestStateMachine\n\
  //   *   IdleState default\n\
@@ -32,12 +34,12 @@
  // on-Replay-Arrow-RunningState-NewLine			//Transition Definition
 //
 
-std::string SyntaxTree::parseTokens(const std::vector<Token>& tokens)
+string SyntaxTree::parseTokens(const vector<Token>& tokens)
 {
 	try {
 		parseTokensInner(tokens);
 	}
-	catch (const std::exception& e)
+	catch (const exception& e)
 	{
 		return e.what();
 	}
@@ -48,7 +50,7 @@ std::string SyntaxTree::parseTokens(const std::vector<Token>& tokens)
 	return "";
 }
 
-void SyntaxTree::parseTokensInner(const std::vector<Token>& tokens)
+void SyntaxTree::parseTokensInner(const vector<Token>& tokens)
 {
 	TokenSequence sequence(tokens);
 	while (sequence.hasNext())
@@ -270,7 +272,7 @@ const void SyntaxTree::CreateRootNode(const Token* val)
 {
 	if (val->type == TokenType::CUSTOM_NAME)
 	{
-		root = std::make_unique<StateMachine>(*val);
+		root = make_unique<StateMachine>(*val);
 		current = root.get();
 		return;
 	}
@@ -327,14 +329,14 @@ const Token* SyntaxTree::PickWithValidation(TokenSequence& seq, bool allowNull)
 	{
 		if (!allowNull)
 		{
-			throw std::invalid_argument("Unexpected file ending.");
+			throw invalid_argument("Unexpected file ending.");
 		}
 		return nullptr;
 	}
 }
 
-const void SyntaxTree::Throw(std::string error, const Token* token)
+const void SyntaxTree::Throw(string error, const Token* token)
 {
-	std::string errorText = error + " - Line: " + std::to_string(token->line) + " Position : " + std::to_string(token->position);
-	throw std::invalid_argument(errorText);
+	string errorText = error + " - Line: " + to_string(token->line) + " Position : " + to_string(token->position);
+	throw invalid_argument(errorText);
 }

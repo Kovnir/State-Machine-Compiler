@@ -8,11 +8,11 @@ public:
 	// Disallow creating an instance of this object
 	Optimizer() = delete;
 
-	static std::vector<Token> clearEverythingBeforeAndAfterStarSlash(std::vector<Token> tokens);
-	static std::vector<Token> clearEverythingBeforeStar(std::vector<Token> tokens);
-	static std::vector<Token> clearNewLinesOnStart(std::vector<Token> tokens);
-	static std::vector<Token> clearNewLinesOnEnd(std::vector<Token> tokens);
-	static std::vector<Token> clearDoubleNewLines(std::vector<Token> tokens);
-	static std::vector<Token> clearAllSpaces(std::vector<Token> tokens);
-	static std::vector<Token> clearAllComments(std::vector<Token> tokens);
+	static vector<Token> clearEverythingBeforeAndAfterStarSlash(vector<Token> tokens);
+	static vector<Token> clearEverythingBeforeStar(vector<Token> tokens);
+	static vector<Token> clearNewLinesOnStart(vector<Token> tokens);
+	static vector<Token> clearNewLinesOnEnd(vector<Token> tokens);
+	static vector<Token> clearDoubleNewLines(vector<Token> tokens);
+	static vector<Token> clearAllSpaces(vector<Token> tokens);
+	static vector<Token> clearAllComments(vector<Token> tokens);
 };

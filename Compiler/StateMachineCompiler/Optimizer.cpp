@@ -2,9 +2,9 @@
 
 
 //if definition started from /* we need to remove everything before /* and after */
-std::vector<Token> Optimizer::clearEverythingBeforeAndAfterStarSlash(std::vector<Token> tokens)
+vector<Token> Optimizer::clearEverythingBeforeAndAfterStarSlash(vector<Token> tokens)
 {
-	std::vector<Token> optimized;
+	vector<Token> optimized;
 	auto size = (int)tokens.size();
 
 	int startPosition = -1;
@@ -40,11 +40,11 @@ std::vector<Token> Optimizer::clearEverythingBeforeAndAfterStarSlash(std::vector
 }
 
 
-std::vector<Token> Optimizer::clearEverythingBeforeStar(std::vector<Token> tokens)
+vector<Token> Optimizer::clearEverythingBeforeStar(vector<Token> tokens)
 {
-	std::vector<Token> optimized;
+	vector<Token> optimized;
 	auto size = (int)tokens.size();
-	std::vector<Token> line;
+	vector<Token> line;
 
 	for (int i = 0; i < size; i++)
 	{
@@ -74,12 +74,12 @@ std::vector<Token> Optimizer::clearEverythingBeforeStar(std::vector<Token> token
 
 
 // if there are a few new line before code starts - remove them
-std::vector<Token> Optimizer::clearNewLinesOnStart(std::vector<Token> tokens)
+vector<Token> Optimizer::clearNewLinesOnStart(vector<Token> tokens)
 {
-	std::vector<Token> optimized;
+	vector<Token> optimized;
 	auto size = (int)tokens.size();
 
-	std::vector<Token> line;
+	vector<Token> line;
 
 
 	bool startFound = false;
@@ -101,12 +101,12 @@ std::vector<Token> Optimizer::clearNewLinesOnStart(std::vector<Token> tokens)
 }
 
 // if there are a few new line after code ends - remove them
-std::vector<Token> Optimizer::clearNewLinesOnEnd(std::vector<Token> tokens)
+vector<Token> Optimizer::clearNewLinesOnEnd(vector<Token> tokens)
 {
-	std::vector<Token> optimized;
+	vector<Token> optimized;
 	auto size = (int)tokens.size();
 
-	std::vector<Token> line;
+	vector<Token> line;
 
 
 	bool newLineFound = false;
@@ -137,9 +137,9 @@ std::vector<Token> Optimizer::clearNewLinesOnEnd(std::vector<Token> tokens)
 	return optimized;
 }
 
-std::vector<Token> Optimizer::clearDoubleNewLines(std::vector<Token> tokens)
+vector<Token> Optimizer::clearDoubleNewLines(vector<Token> tokens)
 {
-	std::vector<Token> optimized;
+	vector<Token> optimized;
 	auto size = (int)tokens.size();
 
 	for (int i = 0; i < size; i++)
@@ -159,9 +159,9 @@ std::vector<Token> Optimizer::clearDoubleNewLines(std::vector<Token> tokens)
 	return optimized;
 }
 
-std::vector<Token> Optimizer::clearAllSpaces(std::vector<Token> tokens)
+vector<Token> Optimizer::clearAllSpaces(vector<Token> tokens)
 {
-	std::vector<Token> optimized;
+	vector<Token> optimized;
 	auto size = (int)tokens.size();
 
 	for (int i = 0; i < size; i++)
@@ -175,9 +175,9 @@ std::vector<Token> Optimizer::clearAllSpaces(std::vector<Token> tokens)
 	return optimized;
 }
 
-std::vector<Token> Optimizer::clearAllComments(std::vector<Token> tokens)
+vector<Token> Optimizer::clearAllComments(vector<Token> tokens)
 {
-	std::vector<Token> optimized;
+	vector<Token> optimized;
 	auto size = (int)tokens.size();
 
 	for (int i = 0; i < size; i++)

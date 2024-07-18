@@ -2,10 +2,10 @@
 #include "Tokenizer.h"
 
 
-std::vector<Token> Tokenizer::parse(std::string input)
+vector<Token> Tokenizer::parse(string input)
 {
-	std::vector<Token> tokens;
-	std::string current = "";
+	vector<Token> tokens;
+	string current = "";
 
 	auto length = (int) input.length();
 
@@ -69,7 +69,7 @@ std::vector<Token> Tokenizer::parse(std::string input)
 		if (c0 == '/' && c1 == '/')
 		{
 			i += 2;
-			std::string value = "";
+			string value = "";
 
 			while (i < length && input[i] != '\n')
 			{
@@ -109,7 +109,7 @@ std::vector<Token> Tokenizer::parse(std::string input)
 		}
 
 		//custom line
-		std::string value = "";
+		string value = "";
 
 		while (i < length && !isBlank(input[i]))
 		{

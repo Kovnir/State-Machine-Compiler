@@ -34,7 +34,7 @@ TEST(SyntaxTree, parseTokens)
 	 // FinishedState-NewLine-                          //State Definition
 	 // on-Replay-Arrow-RunningState					//Transition Definition
 
-	std::vector<Token> tokens = {
+	vector<Token> tokens = {
 		Token(TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3),
 		Token(TokenType::NEW_LINE, "", 1, 19),
 
@@ -95,7 +95,7 @@ TEST(SyntaxTree, parseTokens)
 
 
 	SyntaxTree syntaxTree;
-	std::string error = syntaxTree.parseTokens(tokens);
+	string error = syntaxTree.parseTokens(tokens);
 
 	EXPECT_EQ(error, "");
 

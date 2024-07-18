@@ -3,33 +3,35 @@
 #include <sstream>
 #include "Logger.h"
 
+using namespace std;
+
 class FileProcessor
 {
 public:
 	FileProcessor(bool useFakeData, Logger logger) : useFakeData(useFakeData), logger(logger) {}
 
-	bool writeToFile(const std::string& filePath, const std::string& input, const std::string& code) {
+	bool writeToFile(const string& filePath, const string& input, const string& code) {
 		if (!useFakeData)
 		{
-			std::ofstream outputFile(filePath, std::ios::trunc);
+			ofstream outputFile(filePath, ios::trunc);
 			if (!outputFile)
 			{
 				logger.printError("Failed to open the file for writing");
 				return false;
 			}
 
-			outputFile << input << std::endl;
-			outputFile << code << std::endl;
+			outputFile << input << endl;
+			outputFile << code << endl;
 		}
 		return true;
 	}
 
-	std::string readFile(const std::string& filePath) {
+	string readFile(const string& filePath) {
 		if (useFakeData)
 		{
 
 			//
-//	std::string input = R"(  /*
+//	string input = R"(  /*
 //    * TestStateMachine
 //    *   IdleState default
 //    *     on Play -> RunningState    
@@ -53,14 +55,14 @@ public:
 	*/\n");
 		}
 		else {
-			std::string input;
+			string input;
 			try {
 				input = readFileWithBOMCheck(filePath);
 				input = cleanString(input);
 				logger.printInput(input);
 				return input;
 			}
-			catch (const std::exception& e) {
+			catch (const exception& e) {
 				logger.printError(e.what());
 				return "";
 			}
@@ -71,7 +73,7 @@ private:
 	bool useFakeData;
 	Logger logger;
 
-	bool removeBOM(std::ifstream& file) {
+	bool removeBOM(ifstream& file) {
 		char bom[3] = { 0 };
 		file.read(bom, 3);
 
@@ -87,22 +89,22 @@ private:
 		}
 	}
 
-	std::string readFileWithBOMCheck(const std::string& filePath) {
-		std::ifstream file(filePath, std::ios::binary);
+	string readFileWithBOMCheck(const string& filePath) {
+		ifstream file(filePath, ios::binary);
 		if (!file) {
-			throw std::runtime_error("Failed to open the file for reading");
+			throw runtime_error("Failed to open the file for reading");
 		}
 
 		removeBOM(file);
 
-		std::stringstream buffer;
+		stringstream buffer;
 		buffer << file.rdbuf();
 		return buffer.str();
 	}
 
-	std::string cleanString(const std::string& str) {
+	string cleanString(const string& str) {
 		//to fix double new lines
-		std::string result;
+		string result;
 		result.reserve(str.size());
 		for (char c : str) {
 			if (c != '\r') {

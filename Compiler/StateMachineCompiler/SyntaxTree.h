@@ -6,15 +6,15 @@
 class SyntaxTree
 {
 private:
-	void parseTokensInner(const std::vector<Token>& tokens);
+	void parseTokensInner(const vector<Token>& tokens);
 	const Token* PickWithValidation(TokenSequence& seq, bool allowNull);
 	const void CreateRootNode(const Token* val);
 	const void ValidateTokenType(const Token* val);
-	const void Throw(std::string error, const Token* token);
+	const void Throw(string error, const Token* token);
 	TreeNode* current = nullptr;
 public:
 	SyntaxTree() = default;
-	std::string parseTokens(const std::vector<Token>& tokens);
-	std::unique_ptr<StateMachine> root = nullptr;
+	string parseTokens(const vector<Token>& tokens);
+	unique_ptr<StateMachine> root = nullptr;
 };
 

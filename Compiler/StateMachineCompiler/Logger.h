@@ -10,14 +10,14 @@ private:
 
 public:
 	explicit Logger(bool debugMode) : debugMode(debugMode) {}
-	void printLaunchParams(bool debug, const std::string& filePath) const;
-	void printInput(const std::string& input) const;
-	void printTokens(const std::vector<Token>& tokens) const;
-	void printHeader(const std::string& header) const;
-	void printErrors(const std::vector<std::string>& errors) const;
-	void printError(const std::string& error) const;
+	void printLaunchParams(bool debug, const string& filePath) const;
+	void printInput(const string& input) const;
+	void printTokens(const vector<Token>& tokens) const;
+	void printHeader(const string& header) const;
+	void printErrors(const vector<string>& errors) const;
+	void printError(const string& error) const;
 	void printNoErrors() const;
-	void printCode(const std::string& code) const;
+	void printCode(const string& code) const;
 	void printDone() const;
 };
 

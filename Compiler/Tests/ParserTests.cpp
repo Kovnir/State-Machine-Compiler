@@ -6,14 +6,14 @@
 
 TEST(TokenizerTest, Parse)
 {
-	std::string input = R"(/*
+	string input = R"(/*
  * TestStateMachine
  *  IdleState default // some comment  here   
  *   on Play -> RunningState
  */)";
 
 
-	std::vector<Token> tokens = Tokenizer::parse(input);
+	vector<Token> tokens = Tokenizer::parse(input);
 
 	ASSERT_EQ(tokens.size(), 32);
 

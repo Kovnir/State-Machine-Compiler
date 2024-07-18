@@ -5,7 +5,7 @@
 
 TEST(ErrorChecker, checkErrors)
 {
-	std::vector<Token> tokens = {
+	vector<Token> tokens = {
 		Token(TokenType::COMMENT, " some comment  here   ", 2, 21), // error
 		Token(TokenType::NEW_LINE, "", 2, 46),
 		Token(TokenType::SPACE, "", 3, 0), // error
@@ -31,7 +31,7 @@ TEST(ErrorChecker, checkErrors)
 	//TokenType::STAR_SLASH
 
 
-	std::vector<std::string> optimized = ErrorChecker::checkErrors(tokens);
+	vector<string> optimized = ErrorChecker::checkErrors(tokens);
 
 
 	EXPECT_EQ(optimized.size(), 9);

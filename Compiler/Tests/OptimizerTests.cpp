@@ -7,7 +7,7 @@
 
 TEST(OptimizerTest, clearEverythingBeforeAndAfterStarSlash)
 {
-	std::vector<Token> tokens = {
+	vector<Token> tokens = {
 		Token(TokenType::COMMENT, " some comment  here   ", 2, 21),
 		Token(TokenType::NEW_LINE, "", 2, 46),
 		Token(TokenType::SPACE, "", 3, 0),
@@ -29,7 +29,7 @@ TEST(OptimizerTest, clearEverythingBeforeAndAfterStarSlash)
 		Token(TokenType::STAR, "", 3, 1),
 	};
 
-	std::vector<Token> optimized = Optimizer::clearEverythingBeforeAndAfterStarSlash(tokens);
+	vector<Token> optimized = Optimizer::clearEverythingBeforeAndAfterStarSlash(tokens);
 
 
 	ASSERT_EQ(optimized.size(), 8);
@@ -47,7 +47,7 @@ TEST(OptimizerTest, clearEverythingBeforeAndAfterStarSlash)
 
 TEST(OptimizerTest, clearEverythingBeforeStar)
 {
-	std::vector<Token> tokens = {
+	vector<Token> tokens = {
 		Token(TokenType::SLASH_STAR, "", 0, 0),                  // -
 		Token(TokenType::NEW_LINE, "", 0, 2),
 		Token(TokenType::SPACE, "", 1, 0),                      // -
@@ -81,7 +81,7 @@ TEST(OptimizerTest, clearEverythingBeforeStar)
 		Token(TokenType::STAR_SLASH, "", 4, 0)                  // -
 	};
 
-	std::vector<Token> optimized = Optimizer::clearEverythingBeforeStar(tokens);
+	vector<Token> optimized = Optimizer::clearEverythingBeforeStar(tokens);
 
 
 	ASSERT_EQ(optimized.size(), 23);
@@ -114,7 +114,7 @@ TEST(OptimizerTest, clearEverythingBeforeStar)
 
 TEST(OptimizerTest, clearNewLinesOnStart)
 {
-	std::vector<Token> tokens = {
+	vector<Token> tokens = {
 		Token(TokenType::NEW_LINE, "", 0, 1),
 		Token(TokenType::NEW_LINE, "", 1, 1),
 		Token(TokenType::NEW_LINE, "", 2, 1),
@@ -128,7 +128,7 @@ TEST(OptimizerTest, clearNewLinesOnStart)
 		Token(TokenType::SPACE, "", 4, 2),
 	};
 
-	std::vector<Token> optimized = Optimizer::clearNewLinesOnStart(tokens);
+	vector<Token> optimized = Optimizer::clearNewLinesOnStart(tokens);
 
 	ASSERT_EQ(optimized.size(), 8);
 
@@ -144,7 +144,7 @@ TEST(OptimizerTest, clearNewLinesOnStart)
 
 TEST(OptimizerTest, clearNewLinesOnEnd)
 {
-	std::vector<Token> tokens = {
+	vector<Token> tokens = {
 		Token(TokenType::NEW_LINE, "", 2, 1),
 		Token(TokenType::SPACE, "", 3, 2),
 		Token(TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3),
@@ -159,7 +159,7 @@ TEST(OptimizerTest, clearNewLinesOnEnd)
 
 	};
 
-	std::vector<Token> optimized = Optimizer::clearNewLinesOnEnd(tokens);
+	vector<Token> optimized = Optimizer::clearNewLinesOnEnd(tokens);
 
 	ASSERT_EQ(optimized.size(), 8);
 
@@ -176,7 +176,7 @@ TEST(OptimizerTest, clearNewLinesOnEnd)
 
 TEST(OptimizerTest, clearAllSpaces)
 {
-	std::vector<Token> tokens = {
+	vector<Token> tokens = {
 		Token(TokenType::SPACE, "", 1, 0),                      // -
 		Token(TokenType::SPACE, "", 1, 2),						// -
 		Token(TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3),
@@ -204,7 +204,7 @@ TEST(OptimizerTest, clearAllSpaces)
 		Token(TokenType::NEW_LINE, "", 3, 28),
 	};
 
-	std::vector<Token> optimized = Optimizer::clearAllSpaces(tokens);
+	vector<Token> optimized = Optimizer::clearAllSpaces(tokens);
 
 	ASSERT_EQ(optimized.size(), 11);
 	validateToken(optimized[0], TokenType::CUSTOM_NAME, "TestStateMachine", 1, 3);
@@ -222,7 +222,7 @@ TEST(OptimizerTest, clearAllSpaces)
 
 TEST(OptimizerTest, clearDoubleNewLines)
 {
-	std::vector<Token> tokens = {
+	vector<Token> tokens = {
 		Token(TokenType::NEW_LINE, "", 0, 1),
 		Token(TokenType::NEW_LINE, "", 1, 1),
 		Token(TokenType::NEW_LINE, "", 2, 1),
@@ -236,7 +236,7 @@ TEST(OptimizerTest, clearDoubleNewLines)
 		Token(TokenType::SPACE, "", 4, 2),
 	};
 
-	std::vector<Token> optimized = Optimizer::clearDoubleNewLines(tokens);
+	vector<Token> optimized = Optimizer::clearDoubleNewLines(tokens);
 
 	ASSERT_EQ(optimized.size(), 8);
 
@@ -253,7 +253,7 @@ TEST(OptimizerTest, clearDoubleNewLines)
 
 TEST(OptimizerTest, clearAllComments)
 {
-	std::vector<Token> tokens = {
+	vector<Token> tokens = {
 		Token(TokenType::COMMENT, " some comment  here   ", 2, 21), // remove
 		Token(TokenType::NEW_LINE, "", 2, 46),
 		Token(TokenType::SPACE, "", 3, 0),
@@ -266,7 +266,7 @@ TEST(OptimizerTest, clearAllComments)
 		Token(TokenType::NEW_LINE, "", 2, 46),
 	};
 
-	std::vector<Token> optimized = Optimizer::clearAllComments(tokens);
+	vector<Token> optimized = Optimizer::clearAllComments(tokens);
 
 	ASSERT_EQ(optimized.size(), 7);
 

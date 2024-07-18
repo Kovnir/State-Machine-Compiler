@@ -21,15 +21,15 @@ struct Token
 {
 public:
 	TokenType type;
-	std::string value;
+	string value;
 	int line;
 	int position;
 
-	Token(TokenType type, const std::string& value, int line, int position) : type(type), value(value), line(line), position(position) {}
+	Token(TokenType type, const string& value, int line, int position) : type(type), value(value), line(line), position(position) {}
 
-	std::string toString() const
+	string toString() const
 	{
-		std::string result = "[";
+		string result = "[";
 		result += TokenTypeNames[(int) type];
 		if (type == TokenType::CUSTOM_NAME || type == TokenType::COMMENT)
 		{
