@@ -3,6 +3,8 @@
 #include <vector>
 #include "Token.cpp"
 
+using namespace std;
+
 class Logger
 {
 private:

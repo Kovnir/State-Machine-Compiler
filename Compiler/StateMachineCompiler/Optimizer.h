@@ -2,6 +2,8 @@
 #include <vector>
 #include "Token.cpp"
 
+using namespace std;
+
 class Optimizer
 {
 public:

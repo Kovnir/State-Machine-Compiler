@@ -33,5 +33,5 @@ vector<string> ErrorChecker::checkErrors(const vector<Token>& tokens)
 
 void ErrorChecker::addError(const Token& token, vector<string>& errors)
 {
-	errors.emplace_back("Unexpected token " + token.toString() + " found. Line: " + std::to_string(token.line) + " Position: " + std::to_string(token.position));
+	errors.emplace_back("Unexpected token " + token.toString() + " found. Line: " + to_string(token.line) + " Position: " + to_string(token.position));
 }
