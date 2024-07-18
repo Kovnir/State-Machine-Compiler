@@ -1,8 +1,5 @@
 # State-Machine-Compiler
 
-![Flow Diagram](Docs/generation.gif)
-
-![Flow Diagram](Docs/usage.gif)
 
 ## Overview
 
@@ -61,6 +58,8 @@ Here’s how you can define the state machine, compile it, and then integrate th
     ```sh
     smc path/to/MonsterStateMachine.cs
     ```
+
+    ![Flow Diagram](Docs/generation.gif)
 
 3. **Generated C# Code**:
     ```csharp
@@ -179,6 +178,8 @@ Here’s how you can define the state machine, compile it, and then integrate th
     // or
     // idleState = await attackState.PlayerDead();
     ```
+    ![Flow Diagram](Docs/usage.gif)
+
 
 ## Debugging
 
